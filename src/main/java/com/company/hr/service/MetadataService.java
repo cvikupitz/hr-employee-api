@@ -1,6 +1,7 @@
 package com.company.hr.service;
 
 import com.company.hr.dto.metadata.MetadataRecord;
+import com.company.hr.exception.RecordNotFoundException;
 import com.company.hr.mapper.MetadataMapper;
 import com.company.hr.model.Department;
 import com.company.hr.model.EmployeeStatus;
@@ -32,7 +33,9 @@ public class MetadataService {
 
   public MetadataRecord getDepartmentById(Integer id) {
 
-    Department department = departmentRepository.findById(id).orElseThrow();
+    Department department = departmentRepository
+        .findById(id)
+        .orElseThrow(() -> new RecordNotFoundException("No department record with that ID could be found.", id));
     return metadataMapper.mapDepartmentToDto(department);
   }
 
@@ -44,7 +47,9 @@ public class MetadataService {
 
   public MetadataRecord getEmployeeStatusById(Integer id) {
 
-    EmployeeStatus employeeStatus = employeeStatusRepository.findById(id).orElseThrow();
+    EmployeeStatus employeeStatus = employeeStatusRepository
+        .findById(id)
+        .orElseThrow(() -> new RecordNotFoundException("No employee status record with that ID could be found.", id));
     return metadataMapper.mapEmployeeStatusToDto(employeeStatus);
   }
 
@@ -56,7 +61,9 @@ public class MetadataService {
 
   public MetadataRecord getEmployeeTitleById(Integer id) {
 
-    EmployeeTitle employeeTitle = employeeTitleRepository.findById(id).orElseThrow();
+    EmployeeTitle employeeTitle = employeeTitleRepository
+        .findById(id)
+        .orElseThrow(() -> new RecordNotFoundException("No employee title record with that ID could be found.", id));
     return metadataMapper.mapEmployeeTitleModelToDto(employeeTitle);
   }
 
@@ -68,7 +75,9 @@ public class MetadataService {
 
   public MetadataRecord getEmployeeTypeById(Integer id) {
 
-    EmployeeType employeeType = employeeTypeRepository.findById(id).orElseThrow();
+    EmployeeType employeeType = employeeTypeRepository
+        .findById(id)
+        .orElseThrow(() -> new RecordNotFoundException("No employee type record with that ID could be found.", id));
     return metadataMapper.mapEmployeeTypeToDto(employeeType);
   }
 }

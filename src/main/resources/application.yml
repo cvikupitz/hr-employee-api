@@ -22,3 +22,7 @@ management:
     web:
       exposure:
         include: caches,health,info,loggers,metrics,prometheus,scheduledtasks
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
