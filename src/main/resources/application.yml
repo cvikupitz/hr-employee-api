@@ -1,16 +1,24 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: admin
-    password: p4ssw0rd
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
-  h2:
-    console:
+info:
+  application:
+    name: "@project.artifactId@"
+    organization: "@project.groupId@"
+    version: "@project.version@"
+    description: "@project.description@"
+    build-timestamp: "@maven.build.timestamp@"
+  dependencies:
+    lombok: "@lombok.version@"
+    mapstruct: "@mapstruct.version@"
+    springdoc-openapi-ui: "@springdoc-openapi-ui.version@"
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  info:
+    env:
       enabled: true
-      path: /h2-console
-      settings:
-        trace: false
-        web-allow-others: false
+  endpoints:
+    web:
+      exposure:
+        include: caches,health,info,loggers,metrics,prometheus,scheduledtasks
