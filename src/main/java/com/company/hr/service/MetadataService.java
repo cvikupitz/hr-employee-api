@@ -1,11 +1,12 @@
 package com.company.hr.service;
 
-import com.company.hr.dto.EmployeeTitleDto;
-import com.company.hr.dto.MetadataRecord;
+import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.mapper.MetadataMapper;
+import com.company.hr.model.Department;
 import com.company.hr.model.EmployeeStatus;
 import com.company.hr.model.EmployeeTitle;
 import com.company.hr.model.EmployeeType;
+import com.company.hr.repository.DepartmentRepository;
 import com.company.hr.repository.EmployeeStatusRepository;
 import com.company.hr.repository.EmployeeTitleRepository;
 import com.company.hr.repository.EmployeeTypeRepository;
@@ -17,10 +18,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MetadataService {
 
+  private final DepartmentRepository departmentRepository;
   private final EmployeeStatusRepository employeeStatusRepository;
   private final EmployeeTitleRepository employeeTitleRepository;
   private final EmployeeTypeRepository employeeTypeRepository;
   private final MetadataMapper metadataMapper;
+
+  public List<MetadataRecord> getAllDepartments() {
+
+    List<Department> departments = departmentRepository.findAll();
+    return metadataMapper.mapDepartmentModelsToDto(departments);
+  }
+
+  public MetadataRecord getDepartmentById(Integer id) {
+
+    Department department = departmentRepository.findById(id).orElseThrow();
+    return metadataMapper.mapDepartmentToDto(department);
+  }
 
   public List<MetadataRecord> getAllEmployeeStatuses() {
 
@@ -34,13 +48,13 @@ public class MetadataService {
     return metadataMapper.mapEmployeeStatusToDto(employeeStatus);
   }
 
-  public List<EmployeeTitleDto> getAllEmployeeTitles() {
+  public List<MetadataRecord> getAllEmployeeTitles() {
 
     List<EmployeeTitle> employeeTitles = employeeTitleRepository.findAll();
     return metadataMapper.mapEmployeeTitleModelsToDto(employeeTitles);
   }
 
-  public EmployeeTitleDto getEmployeeTitleById(Integer id) {
+  public MetadataRecord getEmployeeTitleById(Integer id) {
 
     EmployeeTitle employeeTitle = employeeTitleRepository.findById(id).orElseThrow();
     return metadataMapper.mapEmployeeTitleModelToDto(employeeTitle);
