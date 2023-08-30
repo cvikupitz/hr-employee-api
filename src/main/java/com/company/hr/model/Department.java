@@ -16,10 +16,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "employee_titles")
-public class EmployeeTitle extends MetadataModel implements Serializable {
+@Table(name = "departments")
+public class Department extends MetadataModel implements Serializable  {
 
-  private static final long serialVersionUID = 7487186958746737927L;
+  private static final long serialVersionUID = -6386778502803665264L;
 
   @Column(name = "ABBREVIATION", nullable = false)
   private String abbreviation;

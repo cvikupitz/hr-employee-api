@@ -18,6 +18,8 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 public class MetadataModel extends RootModel implements Serializable {
 
+  private static final long serialVersionUID = -516272374207333969L;
+
   @Id
   @Column(name = "_ID", nullable = false, updatable = false)
   private Integer id;

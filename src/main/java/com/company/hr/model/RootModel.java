@@ -17,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 public class RootModel implements Serializable {
 
+  private static final long serialVersionUID = -2761608860338489887L;
+
   @Column(name = "UPDATE_USER_ID", nullable = false, length = ConstraintConstants.NAME_CHAR_LIMIT)
   private String updateUserId;
   @Column(name = "UPDATE_TS", nullable = false)

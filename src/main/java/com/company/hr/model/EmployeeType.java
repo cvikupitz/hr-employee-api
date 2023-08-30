@@ -8,4 +8,5 @@ import javax.persistence.Table;
 @Table(name = "employee_types")
 public class EmployeeType extends MetadataModel implements Serializable {
 
+  private static final long serialVersionUID = 6585849405303253372L;
 }

@@ -22,9 +22,9 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "employees")
 public class Employee extends RootModel implements Serializable {
 
+  private static final long serialVersionUID = 6590314153585833700L;
+
   @Id
-  @Column(name = "_ID", nullable = false, unique = true)
-  private Long employeeId;
   @Column(name = "SSN", nullable = false, unique = true, length = ConstraintConstants.SSN_CHAR_LIMIT, updatable = false)
   private String ssn;
   @Column(name = "FIRST_NAME", nullable = false, length = ConstraintConstants.NAME_CHAR_LIMIT)
@@ -57,6 +57,4 @@ public class Employee extends RootModel implements Serializable {
   private String secondaryPhone;
   @Column(name = "EMAIL_ADDRESS", nullable = false, length = ConstraintConstants.EMAIL_CHAR_LIMIT)
   private String emailAddress;
-  // emergency contacts
-  // position & dept.
 }
