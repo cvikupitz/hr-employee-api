@@ -1,4 +1,4 @@
-package com.company.hr.dto;
+package com.company.hr.dto.metadata;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 public class ComprehensiveMetadata {
 
   private List<MetadataRecord> employeeStatuses;
-  private List<EmployeeTitleDto> employeeTitles;
+  private List<MetadataRecord> employeeTitles;
   private List<MetadataRecord> employeeTypes;
 }

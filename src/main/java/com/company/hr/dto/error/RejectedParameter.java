@@ -1,4 +1,4 @@
-package com.company.hr.dto;
+package com.company.hr.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MetadataRecord {
+public class RejectedParameter {
 
-  private Integer id;
-  private String title;
-  private String updateUserId;
-  private String updateTs;
+  private String field;
+  private Object rejectedValue;
+  private String errorMessage;
 }

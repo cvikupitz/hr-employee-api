@@ -1,5 +1,6 @@
-package com.company.hr.dto;
+package com.company.hr.dto.error;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +12,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class EmployeeTitleDto extends MetadataRecord {
+public class InvalidRequestErrorResponse extends BaseErrorResponse {
 
-  private String abbreviation;
+  private int errorCount;
+  private List<RejectedParameter> params;
 }
