@@ -19,6 +19,7 @@ public class BaseErrorResponse {
   private int code;
   private String cause;
   private String suggestedAction;
+  private String resource;
   @JsonFormat(shape = Shape.STRING)
   private Instant timestamp;
   private UUID transactionId;
