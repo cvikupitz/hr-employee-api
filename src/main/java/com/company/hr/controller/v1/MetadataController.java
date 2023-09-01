@@ -22,7 +22,7 @@ public class MetadataController {
   private final MetadataService metadataService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<ComprehensiveMetadata> getAllMetadata() {
 
     List<MetadataRecord> employeeStatuses = metadataService.getAllEmployeeStatuses();

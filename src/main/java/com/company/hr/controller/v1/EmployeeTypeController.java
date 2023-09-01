@@ -22,7 +22,7 @@ public class EmployeeTypeController {
   private final MetadataService metadataService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<MetadataRecord>> getAllEmployeeTypes() {
 
     List<MetadataRecord> employeeTypes = metadataService.getAllEmployeeTypes();
@@ -30,7 +30,7 @@ public class EmployeeTypeController {
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<MetadataRecord> getEmployeeTypeById(@PathVariable Integer id) {
 
     MetadataRecord employeeType = metadataService.getEmployeeTypeById(id);

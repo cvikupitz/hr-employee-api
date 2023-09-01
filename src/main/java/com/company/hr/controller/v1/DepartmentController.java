@@ -22,7 +22,7 @@ public class DepartmentController {
   private final MetadataService metadataService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<MetadataRecord>> getAllDepartments() {
 
     List<MetadataRecord> departments = metadataService.getAllDepartments();
@@ -30,7 +30,7 @@ public class DepartmentController {
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<MetadataRecord> getDepartmentById(@PathVariable Integer id) {
 
     MetadataRecord department = metadataService.getDepartmentById(id);
