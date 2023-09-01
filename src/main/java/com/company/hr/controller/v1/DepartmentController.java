@@ -1,7 +1,9 @@
 package com.company.hr.controller.v1;
 
+import com.company.hr.annotations.JwtAuthenticated;
 import com.company.hr.constants.EndpointConstants;
 import com.company.hr.dto.metadata.MetadataRecord;
+import com.company.hr.enums.ClientRole;
 import com.company.hr.service.MetadataService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class DepartmentController {
 
   private final MetadataService metadataService;
 
+  @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<MetadataRecord>> getAllDepartments() {
 
@@ -26,6 +29,7 @@ public class DepartmentController {
     return ResponseEntity.ok(departments);
   }
 
+  @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MetadataRecord> getDepartmentById(@PathVariable Integer id) {
 

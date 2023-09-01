@@ -1,0 +1,59 @@
+<configuration scan="true">
+  <contextName>COM-HR-Service</contextName>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+    </layout>
+  </appender>
+
+  <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <timestampPattern>[ISO_INSTANT]</timestampPattern>
+      <fieldNames>
+        <timestamp>timestamp</timestamp>
+        <version>[ignore]</version>
+        <levelValue>[ignore]</levelValue>
+      </fieldNames>
+      <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+        <maxLength>9999</maxLength>
+        <shortenedClassNameLength>64</shortenedClassNameLength>
+        <rootCauseFirst>true</rootCauseFirst>
+      </throwableConverter>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <neverBlock>true</neverBlock>
+    <appender-ref ref="STDOUT" />
+  </appender>
+
+  <appender name="STDOUT_JSON_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <neverBlock>true</neverBlock>
+    <appender-ref ref="STDOUT_JSON" />
+  </appender>
+
+  <springProfile name="default">
+    <logger name="com.company.hr" level="INFO" additivity="false">
+      <appender-ref ref="STDOUT_ASYNC" />
+    </logger>
+    <root level="INFO">
+      <appender-ref ref="STDOUT_ASYNC" />
+    </root>
+  </springProfile>
+
+  <springProfile name="!default">
+    <logger name="com.company.hr" level="INFO" additivity="false">
+      <appender-ref ref="STDOUT_JSON_ASYNC" />
+    </logger>
+    <logger name="org.springframework.data.repository" level="WARN" />
+    <root level="INFO">
+      <appender-ref ref="STDOUT_JSON_ASYNC" />
+    </root>
+  </springProfile>
+
+</configuration>
