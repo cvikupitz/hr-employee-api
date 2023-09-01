@@ -1,0 +1,12 @@
+- [ ] Logging
+- [ ] tracking IDs
+- [ ] JWT authentication
+- [ ] XML Support
+- [ ] Swagger documentation
+- [ ] comments
+- [ ] Javadocs
+- [ ] roles/access levels
+- [ ] unit testing
+- [ ] reformat code
+- [ ] e-tags
+- [ ] custom response headers
