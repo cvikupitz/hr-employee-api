@@ -126,7 +126,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.UNREADABLE_REQUEST_CAUSE)
         .suggestedAction(ErrorResponseConstants.UNREADABLE_REQUEST_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .build();
 
     return ResponseEntity
@@ -205,7 +205,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.INVALID_REQUEST_CAUSE)
         .suggestedAction(ErrorResponseConstants.INVALID_REQUEST_SUGGESTION)
         .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .errorCount(rejectedParameters != null ? rejectedParameters.size() : 0)
         .params(rejectedParameters)
         .build();
@@ -225,7 +225,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.UNAUTHORIZED_REQUEST_CAUSE)
         .suggestedAction(ErrorResponseConstants.UNAUTHORIZED_REQUEST_SUGGESTION)
         .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .detailMsg(ex.getMessage())
         .build();
 
@@ -244,7 +244,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.FORBIDDEN_REQUEST_CAUSE)
         .suggestedAction(ErrorResponseConstants.FORBIDDEN_REQUEST_SUGGESTION)
         .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .build();
 
     return ResponseEntity
@@ -263,7 +263,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.NOT_FOUND_CAUSE)
         .suggestedAction(ErrorResponseConstants.NOT_FOUND_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .build();
 
     return ResponseEntity
@@ -281,7 +281,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.NOT_FOUND_CAUSE)
         .suggestedAction(ErrorResponseConstants.NOT_FOUND_SUGGESTION)
         .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .missingKey(e.getIdentifier())
         .build();
 
@@ -301,7 +301,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .cause(ErrorResponseConstants.METHOD_NOT_ALLOWED_CAUSE)
         .suggestedAction(ErrorResponseConstants.METHOD_NOT_ALLOWED_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .methodUsed(ex.getMethod())
         .supportedMethods(ex.getSupportedMethods())
         .build();
@@ -335,7 +335,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     builder
         .code(status.value())
         .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
+        .timestamp(Instant.now().toString())
         .supportedMediaTypes(supportedMediaTypes);
 
     if (status == HttpStatus.NOT_ACCEPTABLE) {
