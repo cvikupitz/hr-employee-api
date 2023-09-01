@@ -1,6 +1,6 @@
 - [ ] Logging
 - [ ] tracking IDs
-- [ ] JWT authentication
+- [x] JWT authentication
 - [ ] XML Support
 - [ ] Swagger documentation
 - [ ] comments
