@@ -1,4 +1,4 @@
-package com.company.hr.dto;
+package com.company.hr.dto.employee;
 
 import com.company.hr.constants.ConstraintConstants;
 import javax.validation.constraints.Min;
@@ -6,6 +6,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +18,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@XmlRootElement(name = "Employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EmployeeSaveDto {
 
   @NotBlank(message = "The member 'socialSecurityNumber' cannot be null, empty, or blank.")
