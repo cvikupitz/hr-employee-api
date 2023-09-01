@@ -1,10 +1,10 @@
 package com.company.hr.dto.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.time.Instant;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL)
+@XmlRootElement(name = "Error")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BaseErrorResponse {
 
   private String status;
@@ -22,6 +24,5 @@ public class BaseErrorResponse {
   private String cause;
   private String suggestedAction;
   private String path;
-  @JsonFormat(shape = Shape.STRING)
-  private Instant timestamp;
+  private String timestamp;
 }
