@@ -5,7 +5,7 @@
 - [ ] Swagger documentation
 - [ ] comments
 - [ ] Javadocs
-- [ ] roles/access levels
+- [x] roles/access levels
 - [ ] unit testing
 - [ ] reformat code
 - [ ] e-tags
