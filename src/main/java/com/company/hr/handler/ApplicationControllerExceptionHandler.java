@@ -1,26 +1,45 @@
 package com.company.hr.handler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.company.hr.constants.ApplicationConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
+import com.company.hr.dto.error.InvalidJsonResponse;
+import com.company.hr.dto.error.InvalidMediaTypeResponse;
 import com.company.hr.dto.error.InvalidRequestErrorResponse;
+import com.company.hr.dto.error.MethodNotAllowedResponse;
 import com.company.hr.dto.error.RejectedParameter;
 import com.company.hr.dto.error.ResourceNotFoundResponse;
+import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.exception.RecordNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -32,82 +51,184 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-    List<RejectedParameter> rejectedParams = ex.getFieldErrors().stream()
-        .map(error -> RejectedParameter.builder()
-            .errorMessage(error.getDefaultMessage())
-            .field(error.getField())
-            .rejectedValue(error.getRejectedValue())
-            .build())
-        .collect(Collectors.toList());
-
-    InvalidRequestErrorResponse response = InvalidRequestErrorResponse.builder()
-        .status(ApplicationConstants.INVALID_REQUEST_STATUS)
-        .code(HttpStatus.BAD_REQUEST.value())
-        .cause(ApplicationConstants.INVALID_REQUEST_CAUSE)
-        .suggestedAction(ApplicationConstants.INVALID_REQUEST_SUGGESTION)
-        .resource(((ServletWebRequest) request).getRequest().getRequestURI())
-        .timestamp(Instant.now())
-        .errorCount(rejectedParams.size())
-        .params(rejectedParams)
-        .transactionId(UUID.randomUUID())
-        .build();
-
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(response);
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  protected ResponseEntity<InvalidRequestErrorResponse> handleMethodArgumentTypeMismatchException(
-      MethodArgumentTypeMismatchException e, ServletWebRequest request) {
-
-    List<RejectedParameter> rejectedParams = Collections.singletonList(RejectedParameter.builder()
-        .rejectedValue(e.getValue())
-        .field(e.getParameter().getParameterName())
-        .errorMessage(e.getLocalizedMessage())
-        .build());
-
-    InvalidRequestErrorResponse response = InvalidRequestErrorResponse.builder()
-        .status(ApplicationConstants.INVALID_REQUEST_STATUS)
-        .code(HttpStatus.BAD_REQUEST.value())
-        .cause(ApplicationConstants.INVALID_REQUEST_CAUSE)
-        .suggestedAction(ApplicationConstants.INVALID_REQUEST_SUGGESTION)
-        .resource(request.getRequest().getRequestURI())
-        .timestamp(Instant.now())
-        .errorCount(rejectedParams.size())
-        .params(rejectedParams)
-        .transactionId(UUID.randomUUID())
-        .build();
-
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(response);
+  protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException ex, ServletWebRequest request) {
+    return handleInvalidRequest(ex, request);
   }
 
   @Override
   protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
 
-    List<RejectedParameter> rejectedParams = Collections.singletonList(RejectedParameter.builder()
-        .errorMessage(ex.getMessage())
-        .field(ex.getVariableName())
-        .build());
+  @Override
+  protected ResponseEntity<Object> handleMissingServletRequestParameter(
+      MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleServletRequestBindingException(
+      ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMissingServletRequestPart(
+      MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
+    return handleInvalidRequest(ex, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+      HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+    InvalidJsonResponse.InvalidJsonResponseBuilder<?, ?> builder = InvalidJsonResponse.builder();
+    Throwable cause = ex.getCause();
+    if (cause instanceof JsonProcessingException) {
+      JsonProcessingException e1 = (JsonProcessingException) cause;
+      builder
+          .parseError(ExceptionUtils.getMessage(cause))
+          .line(e1.getLocation().getLineNr())
+          .column(e1.getLocation().getColumnNr())
+          .charOffset(e1.getLocation().getCharOffset())
+          .byteOffset(e1.getLocation().getByteOffset())
+          .offsetDesc(e1.getLocation().offsetDescription())
+          .sourceDesc(e1.getLocation().sourceDescription());
+    } else {
+      builder.parseError(ExceptionUtils.getMessage(ex));
+    }
+
+    InvalidJsonResponse response = builder
+        .status(ApplicationConstants.UNREADABLE_REQUEST_STATUS)
+        .code(HttpStatus.BAD_REQUEST.value())
+        .cause(ApplicationConstants.UNREADABLE_REQUEST_CAUSE)
+        .suggestedAction(ApplicationConstants.UNREADABLE_REQUEST_SUGGESTION)
+        .path(((ServletWebRequest) request).getRequest().getRequestURI())
+        .timestamp(Instant.now())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(response);
+  }
+
+  private ResponseEntity<Object> handleInvalidRequest(Exception ex, ServletWebRequest request) {
+
+    List<RejectedParameter> rejectedParameters = null;
+    if (ex instanceof MethodArgumentNotValidException) {
+      MethodArgumentNotValidException e1 = (MethodArgumentNotValidException) ex;
+      rejectedParameters = e1.getFieldErrors().stream()
+          .map(error -> RejectedParameter.builder()
+              .errorMessage(error.getDefaultMessage())
+              .field(error.getField())
+              .rejectedValue(error.getRejectedValue())
+              .build())
+          .collect(Collectors.toList());
+    } else if (ex instanceof MethodArgumentTypeMismatchException) {
+      MethodArgumentTypeMismatchException e1 = (MethodArgumentTypeMismatchException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .rejectedValue(e1.getValue())
+          .field(e1.getParameter().getParameterName())
+          .errorMessage(e1.getLocalizedMessage())
+          .build());
+    } else if (ex instanceof MissingPathVariableException) {
+      MissingPathVariableException e1 = (MissingPathVariableException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getMessage())
+          .field(e1.getVariableName())
+          .build());
+    } else if (ex instanceof MissingServletRequestParameterException) {
+      MissingServletRequestParameterException e1 = (MissingServletRequestParameterException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getMessage())
+          .field(e1.getParameterName())
+          .build());
+    } else if (ex instanceof MissingRequestHeaderException) {
+      MissingRequestHeaderException e1 = (MissingRequestHeaderException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getMessage())
+          .field(e1.getHeaderName())
+          .build());
+    } else if (ex instanceof TypeMismatchException) {
+      TypeMismatchException e1 = (TypeMismatchException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getMessage())
+          .rejectedValue(e1.getPropertyName())
+          .build());
+    } else if (ex instanceof MissingServletRequestPartException) {
+      MissingServletRequestPartException e1 = (MissingServletRequestPartException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getMessage())
+          .field(e1.getRequestPartName())
+          .build());
+    } else if (ex instanceof BindException) {
+      BindException e1 = (BindException) ex;
+      rejectedParameters = e1.getFieldErrors().stream()
+          .map(error -> RejectedParameter.builder()
+              .rejectedValue(error.getRejectedValue())
+              .field(error.getField())
+              .errorMessage(error.getDefaultMessage())
+              .build())
+          .collect(Collectors.toList());
+    } else if (ex instanceof HttpMessageNotReadableException) {
+      HttpMessageNotReadableException e1 = (HttpMessageNotReadableException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getLocalizedMessage())
+          .build());
+    }
 
     InvalidRequestErrorResponse response = InvalidRequestErrorResponse.builder()
         .status(ApplicationConstants.INVALID_REQUEST_STATUS)
         .code(HttpStatus.BAD_REQUEST.value())
         .cause(ApplicationConstants.INVALID_REQUEST_CAUSE)
         .suggestedAction(ApplicationConstants.INVALID_REQUEST_SUGGESTION)
-        .resource(((ServletWebRequest) request).getRequest().getRequestURI())
+        .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now())
-        .errorCount(rejectedParams.size())
-        .params(rejectedParams)
-        .transactionId(UUID.randomUUID())
+        .errorCount(rejectedParameters != null ? rejectedParameters.size() : 0)
+        .params(rejectedParameters)
         .build();
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .body(response);
+  }
+
+  @ExceptionHandler(JWTVerificationException.class)
+  protected ResponseEntity<UnauthorizedRequestResponse> handleJWTVerificationException(JWTVerificationException ex, ServletWebRequest request) {
+
+    UnauthorizedRequestResponse response = UnauthorizedRequestResponse.builder()
+        .status(ApplicationConstants.UNAUTHORIZED_REQUEST_STATUS)
+        .code(HttpStatus.UNAUTHORIZED.value())
+        .cause(ApplicationConstants.UNAUTHORIZED_REQUEST_CAUSE)
+        .suggestedAction(ApplicationConstants.UNAUTHORIZED_REQUEST_SUGGESTION)
+        .path(request.getRequest().getRequestURI())
+        .timestamp(Instant.now())
+        .detailMsg(ex.getMessage())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
         .body(response);
   }
 
@@ -121,9 +242,8 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .code(HttpStatus.NOT_FOUND.value())
         .cause(ApplicationConstants.NOT_FOUND_CAUSE)
         .suggestedAction(ApplicationConstants.NOT_FOUND_SUGGESTION)
-        .resource(((ServletWebRequest) request).getRequest().getRequestURI())
+        .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now())
-        .transactionId(UUID.randomUUID())
         .build();
 
     return ResponseEntity
@@ -132,7 +252,7 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
   }
 
   @ExceptionHandler(RecordNotFoundException.class)
-  public final ResponseEntity<ResourceNotFoundResponse> handleRecordNotFoundException(
+  protected final ResponseEntity<ResourceNotFoundResponse> handleRecordNotFoundException(
       RecordNotFoundException e, ServletWebRequest request) {
 
     ResourceNotFoundResponse response = ResourceNotFoundResponse.builder()
@@ -140,15 +260,85 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .code(HttpStatus.NOT_FOUND.value())
         .cause(ApplicationConstants.NOT_FOUND_CAUSE)
         .suggestedAction(ApplicationConstants.NOT_FOUND_SUGGESTION)
-        .resource(request.getRequest().getRequestURI())
+        .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now())
-        .transactionId(UUID.randomUUID())
         .missingKey(e.getIdentifier())
         .build();
 
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
         .body(response);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+      HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+
+    MethodNotAllowedResponse response = MethodNotAllowedResponse.builder()
+        .status(ApplicationConstants.METHOD_NOT_ALLOWED_STATUS)
+        .code(HttpStatus.METHOD_NOT_ALLOWED.value())
+        .cause(ApplicationConstants.METHOD_NOT_ALLOWED_CAUSE)
+        .suggestedAction(ApplicationConstants.METHOD_NOT_ALLOWED_SUGGESTION)
+        .path(((ServletWebRequest) request).getRequest().getRequestURI())
+        .timestamp(Instant.now())
+        .methodUsed(ex.getMethod())
+        .supportedMethods(ex.getSupportedMethods())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.METHOD_NOT_ALLOWED)
+        .body(response);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
+      HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+    return handleInvalidMediaType(ex, headers, status, (ServletWebRequest) request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
+      HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status,
+      WebRequest request) {
+    return handleInvalidMediaType(ex, headers, status, (ServletWebRequest) request);
+  }
+
+  private ResponseEntity<Object> handleInvalidMediaType(HttpMediaTypeException ex,
+      HttpHeaders headers, HttpStatus status, ServletWebRequest request) {
+
+    InvalidMediaTypeResponse.InvalidMediaTypeResponseBuilder<?, ?> builder = InvalidMediaTypeResponse.builder();
+    String[] supportedMediaTypes =
+        StringUtils.tokenizeToStringArray(MimeTypeUtils.toString(ex.getSupportedMediaTypes()), ",",
+            true, true);
+    builder
+        .code(status.value())
+        .path(request.getRequest().getRequestURI())
+        .timestamp(Instant.now())
+        .supportedMediaTypes(supportedMediaTypes);
+
+    if (status == HttpStatus.NOT_ACCEPTABLE) {
+      String acceptedTypes = MimeTypeUtils.toString(headers.getAccept());
+      builder
+          .status(ApplicationConstants.MEDIA_NOT_ACCEPTED_STATUS)
+          .cause(ApplicationConstants.MEDIA_NOT_ACCEPTED_CAUSE)
+          .suggestedAction(ApplicationConstants.MEDIA_NOT_ACCEPTED_SUGGESTION)
+          .rejectedMediaType(acceptedTypes);
+
+    } else if (status == HttpStatus.UNSUPPORTED_MEDIA_TYPE) {
+      String contentType = request.getHeader("Content-Type");
+      builder
+          .status(ApplicationConstants.MEDIA_NOT_SUPPORTED_STATUS)
+          .cause(ApplicationConstants.MEDIA_NOT_SUPPORTED_CAUSE)
+          .suggestedAction(ApplicationConstants.MEDIA_NOT_SUPPORTED_SUGGESTION)
+          .rejectedMediaType(
+              contentType != null ? contentType : "< 'Content-Type' header not provided >");
+    }
+
+    return ResponseEntity
+        .status(status)
+        .body(builder.build());
   }
 
 }

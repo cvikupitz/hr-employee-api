@@ -1,12 +1,10 @@
 package com.company.hr.dto.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -14,14 +12,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(Include.NON_NULL)
-public class BaseErrorResponse {
+public class InvalidJsonResponse extends BaseErrorResponse {
 
-  private String status;
-  private int code;
-  private String cause;
-  private String suggestedAction;
-  private String path;
-  @JsonFormat(shape = Shape.STRING)
-  private Instant timestamp;
+  private String parseError;
+  private Integer line;
+  private Integer column;
+  private Long byteOffset;
+  private Long charOffset;
+  private String offsetDesc;
+  private String sourceDesc;
 }
