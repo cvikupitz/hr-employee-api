@@ -1,7 +1,6 @@
 package com.company.hr.dto;
 
 import com.company.hr.constants.ConstraintConstants;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -113,12 +112,12 @@ public class EmployeeSaveDto {
           + ConstraintConstants.PHONE_NUMBER_REGEX)
   private String secondaryPhone;
 
-  @NotBlank(message = "The member 'emailAddress' cannot be null, empty, or blank.")
-  @Size(max = ConstraintConstants.EMAIL_CHAR_LIMIT, message =
-      "The member 'emailAddress' cannot exceed " + ConstraintConstants.EMAIL_CHAR_LIMIT
-          + " characters.")
-  @Email(regexp = ConstraintConstants.EMAIL_REGEX, message =
-      "The member 'emailAddress' must match the regex pattern: "
-          + ConstraintConstants.EMAIL_REGEX)
-  private String emailAddress;
+//  @NotBlank(message = "The member 'emailAddress' cannot be null, empty, or blank.")
+//  @Size(max = ConstraintConstants.EMAIL_CHAR_LIMIT, message =
+//      "The member 'emailAddress' cannot exceed " + ConstraintConstants.EMAIL_CHAR_LIMIT
+//          + " characters.")
+//  @Email(regexp = ConstraintConstants.EMAIL_REGEX, message =
+//      "The member 'emailAddress' must match the regex pattern: "
+//          + ConstraintConstants.EMAIL_REGEX)
+//  private String emailAddress;
 }

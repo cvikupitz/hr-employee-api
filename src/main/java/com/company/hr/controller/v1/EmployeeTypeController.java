@@ -20,16 +20,16 @@ public class EmployeeTypeController {
   private final MetadataService metadataService;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<MetadataRecord>> getAllEmployeeTitles() {
+  public ResponseEntity<List<MetadataRecord>> getAllEmployeeTypes() {
 
     List<MetadataRecord> employeeTypes = metadataService.getAllEmployeeTypes();
     return ResponseEntity.ok(employeeTypes);
   }
 
   @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<MetadataRecord> getEmployeeTitleById(@PathVariable Integer id) {
+  public ResponseEntity<MetadataRecord> getEmployeeTypeById(@PathVariable Integer id) {
 
-    MetadataRecord employeeType = metadataService.getEmployeeTitleById(id);
+    MetadataRecord employeeType = metadataService.getEmployeeTypeById(id);
     return ResponseEntity.ok(employeeType);
   }
 }
