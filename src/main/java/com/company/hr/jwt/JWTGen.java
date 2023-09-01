@@ -1,5 +1,7 @@
 package com.company.hr.jwt;
 
+import com.company.hr.enums.ClientRole;
+
 public final class JWTGen {
 
   public static void main(String[] args) {
@@ -10,8 +12,8 @@ public final class JWTGen {
       System.exit(1);
     }
 
-    JWTAuthService service = new JWTAuthService(System.getProperty("com.hr.key"));
-    String key = service.createToken(args[0], args[1]);
+    JWTAuthService service = new JWTAuthService(System.getProperty("com.hr.key").getBytes());
+    String key = service.createToken(args[0], args[1], ClientRole.READ_ONLY.getLevel());
     System.out.println(key);
   }
 

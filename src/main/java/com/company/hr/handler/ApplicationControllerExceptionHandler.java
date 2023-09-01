@@ -1,7 +1,7 @@
 package com.company.hr.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.company.hr.constants.ApplicationConstants;
+import com.company.hr.constants.ErrorResponseConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.InvalidJsonResponse;
 import com.company.hr.dto.error.InvalidMediaTypeResponse;
@@ -10,6 +10,7 @@ import com.company.hr.dto.error.MethodNotAllowedResponse;
 import com.company.hr.dto.error.RejectedParameter;
 import com.company.hr.dto.error.ResourceNotFoundResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
+import com.company.hr.exception.DeniedPermissionException;
 import com.company.hr.exception.RecordNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.Instant;
@@ -120,10 +121,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     }
 
     InvalidJsonResponse response = builder
-        .status(ApplicationConstants.UNREADABLE_REQUEST_STATUS)
+        .status(ErrorResponseConstants.UNREADABLE_REQUEST_STATUS)
         .code(HttpStatus.BAD_REQUEST.value())
-        .cause(ApplicationConstants.UNREADABLE_REQUEST_CAUSE)
-        .suggestedAction(ApplicationConstants.UNREADABLE_REQUEST_SUGGESTION)
+        .cause(ErrorResponseConstants.UNREADABLE_REQUEST_CAUSE)
+        .suggestedAction(ErrorResponseConstants.UNREADABLE_REQUEST_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now())
         .build();
@@ -199,10 +200,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     }
 
     InvalidRequestErrorResponse response = InvalidRequestErrorResponse.builder()
-        .status(ApplicationConstants.INVALID_REQUEST_STATUS)
+        .status(ErrorResponseConstants.INVALID_REQUEST_STATUS)
         .code(HttpStatus.BAD_REQUEST.value())
-        .cause(ApplicationConstants.INVALID_REQUEST_CAUSE)
-        .suggestedAction(ApplicationConstants.INVALID_REQUEST_SUGGESTION)
+        .cause(ErrorResponseConstants.INVALID_REQUEST_CAUSE)
+        .suggestedAction(ErrorResponseConstants.INVALID_REQUEST_SUGGESTION)
         .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now())
         .errorCount(rejectedParameters != null ? rejectedParameters.size() : 0)
@@ -215,13 +216,14 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
   }
 
   @ExceptionHandler(JWTVerificationException.class)
-  protected ResponseEntity<UnauthorizedRequestResponse> handleJWTVerificationException(JWTVerificationException ex, ServletWebRequest request) {
+  protected ResponseEntity<UnauthorizedRequestResponse> handleJWTVerificationException(
+      JWTVerificationException ex, ServletWebRequest request) {
 
     UnauthorizedRequestResponse response = UnauthorizedRequestResponse.builder()
-        .status(ApplicationConstants.UNAUTHORIZED_REQUEST_STATUS)
+        .status(ErrorResponseConstants.UNAUTHORIZED_REQUEST_STATUS)
         .code(HttpStatus.UNAUTHORIZED.value())
-        .cause(ApplicationConstants.UNAUTHORIZED_REQUEST_CAUSE)
-        .suggestedAction(ApplicationConstants.UNAUTHORIZED_REQUEST_SUGGESTION)
+        .cause(ErrorResponseConstants.UNAUTHORIZED_REQUEST_CAUSE)
+        .suggestedAction(ErrorResponseConstants.UNAUTHORIZED_REQUEST_SUGGESTION)
         .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now())
         .detailMsg(ex.getMessage())
@@ -232,16 +234,34 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .body(response);
   }
 
+  @ExceptionHandler(DeniedPermissionException.class)
+  protected ResponseEntity<BaseErrorResponse> handleDeniedPermissionException(
+      DeniedPermissionException ex, ServletWebRequest request) {
+
+    BaseErrorResponse response = BaseErrorResponse.builder()
+        .status(ErrorResponseConstants.FORBIDDEN_REQUEST_STATUS)
+        .code(HttpStatus.FORBIDDEN.value())
+        .cause(ErrorResponseConstants.FORBIDDEN_REQUEST_CAUSE)
+        .suggestedAction(ErrorResponseConstants.FORBIDDEN_REQUEST_SUGGESTION)
+        .path(request.getRequest().getRequestURI())
+        .timestamp(Instant.now())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(response);
+  }
+
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
       HttpHeaders headers,
       HttpStatus status, WebRequest request) {
 
     BaseErrorResponse response = BaseErrorResponse.builder()
-        .status(ApplicationConstants.NOT_FOUND_STATUS)
+        .status(ErrorResponseConstants.NOT_FOUND_STATUS)
         .code(HttpStatus.NOT_FOUND.value())
-        .cause(ApplicationConstants.NOT_FOUND_CAUSE)
-        .suggestedAction(ApplicationConstants.NOT_FOUND_SUGGESTION)
+        .cause(ErrorResponseConstants.NOT_FOUND_CAUSE)
+        .suggestedAction(ErrorResponseConstants.NOT_FOUND_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now())
         .build();
@@ -256,10 +276,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
       RecordNotFoundException e, ServletWebRequest request) {
 
     ResourceNotFoundResponse response = ResourceNotFoundResponse.builder()
-        .status(ApplicationConstants.NOT_FOUND_STATUS)
+        .status(ErrorResponseConstants.NOT_FOUND_STATUS)
         .code(HttpStatus.NOT_FOUND.value())
-        .cause(ApplicationConstants.NOT_FOUND_CAUSE)
-        .suggestedAction(ApplicationConstants.NOT_FOUND_SUGGESTION)
+        .cause(ErrorResponseConstants.NOT_FOUND_CAUSE)
+        .suggestedAction(ErrorResponseConstants.NOT_FOUND_SUGGESTION)
         .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now())
         .missingKey(e.getIdentifier())
@@ -276,10 +296,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
       WebRequest request) {
 
     MethodNotAllowedResponse response = MethodNotAllowedResponse.builder()
-        .status(ApplicationConstants.METHOD_NOT_ALLOWED_STATUS)
+        .status(ErrorResponseConstants.METHOD_NOT_ALLOWED_STATUS)
         .code(HttpStatus.METHOD_NOT_ALLOWED.value())
-        .cause(ApplicationConstants.METHOD_NOT_ALLOWED_CAUSE)
-        .suggestedAction(ApplicationConstants.METHOD_NOT_ALLOWED_SUGGESTION)
+        .cause(ErrorResponseConstants.METHOD_NOT_ALLOWED_CAUSE)
+        .suggestedAction(ErrorResponseConstants.METHOD_NOT_ALLOWED_SUGGESTION)
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now())
         .methodUsed(ex.getMethod())
@@ -321,17 +341,17 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     if (status == HttpStatus.NOT_ACCEPTABLE) {
       String acceptedTypes = MimeTypeUtils.toString(headers.getAccept());
       builder
-          .status(ApplicationConstants.MEDIA_NOT_ACCEPTED_STATUS)
-          .cause(ApplicationConstants.MEDIA_NOT_ACCEPTED_CAUSE)
-          .suggestedAction(ApplicationConstants.MEDIA_NOT_ACCEPTED_SUGGESTION)
+          .status(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_STATUS)
+          .cause(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_CAUSE)
+          .suggestedAction(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_SUGGESTION)
           .rejectedMediaType(acceptedTypes);
 
     } else if (status == HttpStatus.UNSUPPORTED_MEDIA_TYPE) {
       String contentType = request.getHeader("Content-Type");
       builder
-          .status(ApplicationConstants.MEDIA_NOT_SUPPORTED_STATUS)
-          .cause(ApplicationConstants.MEDIA_NOT_SUPPORTED_CAUSE)
-          .suggestedAction(ApplicationConstants.MEDIA_NOT_SUPPORTED_SUGGESTION)
+          .status(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_STATUS)
+          .cause(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_CAUSE)
+          .suggestedAction(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_SUGGESTION)
           .rejectedMediaType(
               contentType != null ? contentType : "< 'Content-Type' header not provided >");
     }
