@@ -13,7 +13,7 @@ public final class JWTGen {
     }
 
     JWTAuthService service = new JWTAuthService(System.getProperty("com.hr.key").getBytes());
-    String key = service.createToken(args[0], args[1], ClientRole.READ_ONLY.getLevel());
+    String key = service.createToken(args[0], args[1], ClientRole.ADMINISTRATOR.getLevel());
     System.out.println(key);
   }
 

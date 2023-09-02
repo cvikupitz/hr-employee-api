@@ -4,8 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.UUID;
 
 public final class JWTAuthService {
@@ -39,7 +39,7 @@ public final class JWTAuthService {
         .withClaim(ORG_NAME_CLAIM, orgName)
         .withClaim(APP_NAME_CLAIM, appName)
         .withClaim(PERMISSION_LEVEL_CLAIM, permissionLevel)
-        .withIssuedAt(new Date())
+        .withIssuedAt(Instant.now())
         .withJWTId(UUID.randomUUID().toString())
         .sign(this.algorithm);
   }
