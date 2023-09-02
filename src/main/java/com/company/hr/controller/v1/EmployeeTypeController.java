@@ -12,6 +12,8 @@ import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
 import com.company.hr.service.MetadataService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,6 +43,11 @@ public class EmployeeTypeController {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class)),
           @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class))
       })
+  @ApiResponse(description = SpringDocConstants.HTTP_NO_CONTENT_DESCRIPTION, responseCode = SpringDocConstants.HTTP_NO_CONTENT,
+      content = {
+          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE),
+          @Content(mediaType = MediaType.APPLICATION_XML_VALUE)
+      })
   @ApiResponse(description = SpringDocConstants.HTTP_UNAUTHORIZED_DESCRIPTION, responseCode = SpringDocConstants.HTTP_UNAUTHORIZED,
       content = {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UnauthorizedRequestResponse.class)),
@@ -57,7 +64,10 @@ public class EmployeeTypeController {
     ComprehensiveMetadata response = ComprehensiveMetadata.builder()
         .employeeTypes(employeeTypes)
         .build();
-    return ResponseEntity.ok(response);
+
+    return response.isEmpty() ?
+        ResponseEntity.noContent().build() :
+        ResponseEntity.ok(response);
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
@@ -89,7 +99,11 @@ public class EmployeeTypeController {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ResourceNotFoundResponse.class)),
           @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = ResourceNotFoundResponse.class))
       })
-  public ResponseEntity<MetadataRecord> getEmployeeTypeById(@PathVariable Integer id) {
+  public ResponseEntity<MetadataRecord> getEmployeeTypeById(
+      @Parameter(
+          description = "The ID of the employee type to search for.",
+          in = ParameterIn.PATH,
+          schema = @Schema(implementation = Integer.class)) @PathVariable Integer id) {
 
     MetadataRecord employeeType = metadataService.getEmployeeTypeById(id);
     return ResponseEntity.ok(employeeType);

@@ -38,6 +38,11 @@ public class MetadataController {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class)),
           @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class))
       })
+  @ApiResponse(description = SpringDocConstants.HTTP_NO_CONTENT_DESCRIPTION, responseCode = SpringDocConstants.HTTP_NO_CONTENT,
+      content = {
+          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE),
+          @Content(mediaType = MediaType.APPLICATION_XML_VALUE)
+      })
   @ApiResponse(description = SpringDocConstants.HTTP_UNAUTHORIZED_DESCRIPTION, responseCode = SpringDocConstants.HTTP_UNAUTHORIZED,
       content = {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UnauthorizedRequestResponse.class)),
@@ -50,15 +55,19 @@ public class MetadataController {
       })
   public ResponseEntity<ComprehensiveMetadata> getAllMetadata() {
 
+    List<MetadataRecord> departments = metadataService.getAllDepartments();
     List<MetadataRecord> employeeStatuses = metadataService.getAllEmployeeStatuses();
     List<MetadataRecord> employeeTitles = metadataService.getAllEmployeeTitles();
     List<MetadataRecord> employeeTypes = metadataService.getAllEmployeeTypes();
     ComprehensiveMetadata response = ComprehensiveMetadata.builder()
+        .departments(departments)
         .employeeStatuses(employeeStatuses)
         .employeeTitles(employeeTitles)
         .employeeTypes(employeeTypes)
         .build();
 
-    return ResponseEntity.ok(response);
+    return response.isEmpty() ?
+        ResponseEntity.noContent().build() :
+        ResponseEntity.ok(response);
   }
 }

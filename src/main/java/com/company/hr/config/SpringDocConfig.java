@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(servers = {
-    @Server(url = "/")
+    @Server(url = "http://localhost:8080")
 })
 public class SpringDocConfig {
 

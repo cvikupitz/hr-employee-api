@@ -1,5 +1,6 @@
 package com.company.hr.dto.metadata;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.List;
@@ -34,4 +35,12 @@ public class ComprehensiveMetadata {
   @XmlElementWrapper
   @XmlElement(name = "employeeType")
   private List<MetadataRecord> employeeTypes;
+
+  @JsonIgnore
+  public boolean isEmpty() {
+    return (departments == null || departments.isEmpty()) &&
+        (employeeStatuses == null || employeeStatuses.isEmpty()) &&
+        (employeeTitles == null || employeeTitles.isEmpty()) &&
+        (employeeTypes == null || employeeTypes.isEmpty());
+  }
 }
