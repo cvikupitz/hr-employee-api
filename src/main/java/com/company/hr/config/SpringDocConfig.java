@@ -27,9 +27,9 @@ public class SpringDocConfig {
     // Security components used for injecting authorization header from Swagger UI
     Components components = new Components()
         .addSecuritySchemes(ApplicationConstants.HEADER_AUTHORIZATION_KEY, new SecurityScheme()
-                .type(Type.APIKEY)
-                .in(In.HEADER)
-                .name(ApplicationConstants.HEADER_AUTHORIZATION_KEY));
+            .type(Type.APIKEY)
+            .in(In.HEADER)
+            .name(ApplicationConstants.HEADER_AUTHORIZATION_KEY));
     SecurityRequirement securityRequirement =
         new SecurityRequirement().addList(ApplicationConstants.HEADER_AUTHORIZATION_KEY);
     // Basic information to display on page

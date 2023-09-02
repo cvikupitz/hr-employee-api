@@ -19,10 +19,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 
   private final JWTAuthService jwtAuthService;
 
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+      Object handler) {
 
     if (HandlerMethod.class.isAssignableFrom(handler.getClass())) {
-      authenticateJwtToken(request, (HandlerMethod)handler);
+      authenticateJwtToken(request, (HandlerMethod) handler);
     }
     return true;
   }

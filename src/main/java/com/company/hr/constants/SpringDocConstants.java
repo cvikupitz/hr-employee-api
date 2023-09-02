@@ -2,7 +2,8 @@ package com.company.hr.constants;
 
 public final class SpringDocConstants {
 
-  private SpringDocConstants() {}
+  private SpringDocConstants() {
+  }
 
   public static final String HTTP_OK = "200";
   public static final String HTTP_OK_DESCRIPTION = "The request was successful.";
@@ -16,7 +17,7 @@ public final class SpringDocConstants {
   public static final String HTTP_BAD_REQUEST = "400";
   public static final String HTTP_BAD_REQUEST_DESCRIPTION = "The request was invalid and could not be processed.";
 
-  public static final String HTTP_UNAUTHORIZED= "401";
+  public static final String HTTP_UNAUTHORIZED = "401";
   public static final String HTTP_UNAUTHORIZED_DESCRIPTION = "The client is not authenticated.";
 
   public static final String HTTP_FORBIDDEN = "403";

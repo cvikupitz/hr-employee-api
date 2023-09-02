@@ -35,7 +35,9 @@ public class MetadataService {
 
     Department department = departmentRepository
         .findById(id)
-        .orElseThrow(() -> new RecordNotFoundException("No department record with that ID could be found.", id));
+        .orElseThrow(
+            () -> new RecordNotFoundException("No department record with that ID could be found.",
+                id));
     return metadataMapper.mapDepartmentToDto(department);
   }
 
@@ -49,7 +51,8 @@ public class MetadataService {
 
     EmployeeStatus employeeStatus = employeeStatusRepository
         .findById(id)
-        .orElseThrow(() -> new RecordNotFoundException("No employee status record with that ID could be found.", id));
+        .orElseThrow(() -> new RecordNotFoundException(
+            "No employee status record with that ID could be found.", id));
     return metadataMapper.mapEmployeeStatusToDto(employeeStatus);
   }
 
@@ -63,7 +66,8 @@ public class MetadataService {
 
     EmployeeTitle employeeTitle = employeeTitleRepository
         .findById(id)
-        .orElseThrow(() -> new RecordNotFoundException("No employee title record with that ID could be found.", id));
+        .orElseThrow(() -> new RecordNotFoundException(
+            "No employee title record with that ID could be found.", id));
     return metadataMapper.mapEmployeeTitleModelToDto(employeeTitle);
   }
 
@@ -77,7 +81,8 @@ public class MetadataService {
 
     EmployeeType employeeType = employeeTypeRepository
         .findById(id)
-        .orElseThrow(() -> new RecordNotFoundException("No employee type record with that ID could be found.", id));
+        .orElseThrow(() -> new RecordNotFoundException(
+            "No employee type record with that ID could be found.", id));
     return metadataMapper.mapEmployeeTypeToDto(employeeType);
   }
 }

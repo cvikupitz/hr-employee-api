@@ -10,7 +10,7 @@ public class JwtConfig {
 
   @Bean
   public JWTAuthService registerJwtService() {
-    return new JWTAuthService( System.getProperty("com.hr.key").getBytes() );
+    return new JWTAuthService(System.getProperty("com.hr.key").getBytes());
   }
 
   @Bean

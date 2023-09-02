@@ -17,7 +17,8 @@ public class WebFilterConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(jwtAuthInterceptor).addPathPatterns(EndpointConstants.V1_ROOT_URI + "/*");
+    registry.addInterceptor(jwtAuthInterceptor)
+        .addPathPatterns(EndpointConstants.V1_ROOT_URI + "/*");
   }
 
   @Override

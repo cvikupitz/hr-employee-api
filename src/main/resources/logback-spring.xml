@@ -29,34 +29,34 @@
     <queueSize>500</queueSize>
     <discardingThreshold>0</discardingThreshold>
     <neverBlock>true</neverBlock>
-    <appender-ref ref="STDOUT" />
+    <appender-ref ref="STDOUT"/>
   </appender>
 
   <appender name="STDOUT_JSON_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
     <queueSize>500</queueSize>
     <discardingThreshold>0</discardingThreshold>
     <neverBlock>true</neverBlock>
-    <appender-ref ref="STDOUT_JSON" />
+    <appender-ref ref="STDOUT_JSON"/>
   </appender>
 
   <!--  Start the application with Spring profile 'default' to enable plain-text logging -->
   <springProfile name="default">
     <logger name="com.company.hr" level="INFO" additivity="false">
-      <appender-ref ref="STDOUT_ASYNC" />
+      <appender-ref ref="STDOUT_ASYNC"/>
     </logger>
     <root level="INFO">
-      <appender-ref ref="STDOUT_ASYNC" />
+      <appender-ref ref="STDOUT_ASYNC"/>
     </root>
   </springProfile>
 
   <!--  Start the application without Spring profile 'default' to enable JSON logging -->
   <springProfile name="!default">
     <logger name="com.company.hr" level="INFO" additivity="false">
-      <appender-ref ref="STDOUT_JSON_ASYNC" />
+      <appender-ref ref="STDOUT_JSON_ASYNC"/>
     </logger>
-    <logger name="org.springframework.data.repository" level="WARN" />
+    <logger name="org.springframework.data.repository" level="WARN"/>
     <root level="INFO">
-      <appender-ref ref="STDOUT_JSON_ASYNC" />
+      <appender-ref ref="STDOUT_JSON_ASYNC"/>
     </root>
   </springProfile>
 
