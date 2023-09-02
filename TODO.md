@@ -1,5 +1,8 @@
 - [ ] Logging
 - [ ] tracking IDs
+- [ ] rest of API
+- [ ] pagination
+- [ ] caching
 - [x] JWT authentication
 - [x] XML Support
 - [x] Swagger documentation
