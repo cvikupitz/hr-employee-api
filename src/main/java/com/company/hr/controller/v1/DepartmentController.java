@@ -9,7 +9,7 @@ import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.metadata.ComprehensiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
-import com.company.hr.service.MetadataService;
+import com.company.hr.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = SpringDocConstants.DEPARTMENT_API_TAG)
 public class DepartmentController {
 
-  private final MetadataService metadataService;
+  private final DepartmentService departmentService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -59,7 +59,7 @@ public class DepartmentController {
       })
   public ResponseEntity<ComprehensiveMetadata> getAllDepartments() {
 
-    List<MetadataRecord> departments = metadataService.getAllDepartments();
+    List<MetadataRecord> departments = departmentService.getAllDepartments();
     ComprehensiveMetadata response = ComprehensiveMetadata.builder()
         .departments(departments)
         .build();
@@ -99,7 +99,7 @@ public class DepartmentController {
           in = ParameterIn.PATH,
           schema = @Schema(implementation = Integer.class)) @PathVariable Integer id) {
 
-    MetadataRecord department = metadataService.getDepartmentById(id);
+    MetadataRecord department = departmentService.getDepartmentById(id);
     return ResponseEntity.ok(department);
   }
 }

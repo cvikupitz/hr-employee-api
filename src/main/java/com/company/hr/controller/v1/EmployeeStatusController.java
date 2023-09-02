@@ -9,7 +9,7 @@ import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.metadata.ComprehensiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
-import com.company.hr.service.MetadataService;
+import com.company.hr.service.EmployeeStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = SpringDocConstants.EMPLOYEE_STATUSES_API_TAG)
 public class EmployeeStatusController {
 
-  private final MetadataService metadataService;
+  private final EmployeeStatusService employeeStatusService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -59,7 +59,7 @@ public class EmployeeStatusController {
       })
   public ResponseEntity<ComprehensiveMetadata> getAllEmployeeStatuses() {
 
-    List<MetadataRecord> employeeStatuses = metadataService.getAllEmployeeStatuses();
+    List<MetadataRecord> employeeStatuses = employeeStatusService.getAllEmployeeStatuses();
     ComprehensiveMetadata response = ComprehensiveMetadata.builder()
         .employeeStatuses(employeeStatuses)
         .build();
@@ -99,7 +99,7 @@ public class EmployeeStatusController {
           in = ParameterIn.PATH,
           schema = @Schema(implementation = Integer.class)) @PathVariable Integer id) {
 
-    MetadataRecord employeeStatus = metadataService.getEmployeeStatusById(id);
+    MetadataRecord employeeStatus = employeeStatusService.getEmployeeStatusById(id);
     return ResponseEntity.ok(employeeStatus);
   }
 }

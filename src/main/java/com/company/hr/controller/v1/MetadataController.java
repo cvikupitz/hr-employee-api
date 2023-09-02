@@ -8,7 +8,10 @@ import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.metadata.ComprehensiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
-import com.company.hr.service.MetadataService;
+import com.company.hr.service.DepartmentService;
+import com.company.hr.service.EmployeeStatusService;
+import com.company.hr.service.EmployeeTitleService;
+import com.company.hr.service.EmployeeTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = SpringDocConstants.METADATA_API_TAG)
 public class MetadataController {
 
-  private final MetadataService metadataService;
+  private final DepartmentService departmentService;
+  private final EmployeeStatusService employeeStatusService;
+  private final EmployeeTitleService employeeTitleService;
+  private final EmployeeTypeService employeeTypeService;
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -55,10 +61,10 @@ public class MetadataController {
       })
   public ResponseEntity<ComprehensiveMetadata> getAllMetadata() {
 
-    List<MetadataRecord> departments = metadataService.getAllDepartments();
-    List<MetadataRecord> employeeStatuses = metadataService.getAllEmployeeStatuses();
-    List<MetadataRecord> employeeTitles = metadataService.getAllEmployeeTitles();
-    List<MetadataRecord> employeeTypes = metadataService.getAllEmployeeTypes();
+    List<MetadataRecord> departments = departmentService.getAllDepartments();
+    List<MetadataRecord> employeeStatuses = employeeStatusService.getAllEmployeeStatuses();
+    List<MetadataRecord> employeeTitles = employeeTitleService.getAllEmployeeTitles();
+    List<MetadataRecord> employeeTypes = employeeTypeService.getAllEmployeeTypes();
     ComprehensiveMetadata response = ComprehensiveMetadata.builder()
         .departments(departments)
         .employeeStatuses(employeeStatuses)
