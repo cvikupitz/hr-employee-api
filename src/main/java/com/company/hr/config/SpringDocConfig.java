@@ -1,6 +1,7 @@
 package com.company.hr.config;
 
 import com.company.hr.constants.ApplicationConstants;
+import com.company.hr.constants.SpringDocConstants;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
@@ -35,6 +36,6 @@ public class SpringDocConfig {
         )
         .security(List.of(
             new SecurityRequirement().addList(ApplicationConstants.HEADER_AUTHORIZATION_KEY)))
-        .info(new Info().title("COM HR API Service").version("v1"));
+        .info(new Info().title(SpringDocConstants.APP_NAME).version(SpringDocConstants.VERSION));
   }
 }
