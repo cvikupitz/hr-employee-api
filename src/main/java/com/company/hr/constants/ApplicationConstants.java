@@ -10,7 +10,4 @@ public final class ApplicationConstants {
 
   public static final String HEADER_AUTHORIZATION_KEY = "X-Authorization";
   public static final String HEADER_REQUEST_ID_KEY = "X-Request-ID";
-
-
-
 }

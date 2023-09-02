@@ -2,7 +2,7 @@
 - [ ] tracking IDs
 - [x] JWT authentication
 - [x] XML Support
-- [ ] Swagger documentation
+- [x] Swagger documentation
 - [ ] comments
 - [ ] Javadocs
 - [x] roles/access levels

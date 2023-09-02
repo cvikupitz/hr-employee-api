@@ -17,7 +17,7 @@ public final class TestUtils {
     return mapper.writeValueAsString(obj);
   }
 
-  public String marshalObjectToXml(Object obj, Class clazz) throws JAXBException {
+  public <T> String marshalObjectToXml(Object obj, Class<T> clazz) throws JAXBException {
     JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
     StringWriter sw = new StringWriter();
     jaxbContext.createMarshaller().marshal(obj, sw);

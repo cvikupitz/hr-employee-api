@@ -6,9 +6,17 @@ info:
     description: "@project.description@"
     build-timestamp: "@maven.build.timestamp@"
   dependencies:
+    spring-framework: "@spring-framework.version@"
     lombok: "@lombok.version@"
     mapstruct: "@mapstruct.version@"
+    commons-lang: "@commons-lang3.version@"
+    java-jwt: "@java-jwt.version@"
+    logback-classic: "@logback-classic.version@"
+    logback-json-classic: "@logback-json-classic.version@"
+    logback-jackson: "@logback-jackson.version@"
+    logstash-logback-encoder: "@logstash-logback-encoder.version@"
     springdoc-openapi-ui: "@springdoc-openapi-ui.version@"
+    micrometer-registry-prometheus: "@micrometer.version@"
 
 management:
   endpoint:
