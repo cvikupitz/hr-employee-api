@@ -2,6 +2,7 @@ package com.company.hr.controller.v1;
 
 import com.company.hr.annotations.JwtAuthenticated;
 import com.company.hr.constants.EndpointConstants;
+import com.company.hr.dto.metadata.ComprehensiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
 import com.company.hr.service.MetadataService;
@@ -23,10 +24,13 @@ public class DepartmentController {
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<List<MetadataRecord>> getAllDepartments() {
+  public ResponseEntity<ComprehensiveMetadata> getAllDepartments() {
 
     List<MetadataRecord> departments = metadataService.getAllDepartments();
-    return ResponseEntity.ok(departments);
+    ComprehensiveMetadata response = ComprehensiveMetadata.builder()
+        .departments(departments)
+        .build();
+    return ResponseEntity.ok(response);
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)

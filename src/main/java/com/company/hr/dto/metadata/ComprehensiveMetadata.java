@@ -1,5 +1,7 @@
 package com.company.hr.dto.metadata;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,10 +17,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 @XmlRootElement(name = "Metadata")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ComprehensiveMetadata {
 
+  @XmlElementWrapper
+  @XmlElement(name = "department")
+  private List<MetadataRecord> departments;
   @XmlElementWrapper
   @XmlElement(name = "employeeStatus")
   private List<MetadataRecord> employeeStatuses;

@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JwtAuthenticated {
 
-  ClientRole value() default ClientRole.READ_ONLY;
+  ClientRole value();
 }
