@@ -36,7 +36,6 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     }
 
     String jwtToken = request.getHeader(ApplicationConstants.HEADER_AUTHORIZATION_KEY);
-    Enumeration<?> s = request.getHeaderNames();
     DecodedJWT decodedJWT = jwtAuthService.validate(jwtToken);
     Claim userRole = decodedJWT.getClaim(JWTAuthService.PERMISSION_LEVEL_CLAIM);
     ClientRole accessLevel = authAnnotation.value();
