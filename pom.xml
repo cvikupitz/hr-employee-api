@@ -27,6 +27,8 @@
     <logback-json-classic.version>0.1.5</logback-json-classic.version>
     <logback-jackson.version>0.1.5</logback-jackson.version>
     <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
+    <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
+    <junit-platform-suite-engine.version>1.8.1</junit-platform-suite-engine.version>
     <!-- Plugin versions -->
     <maven-compiler-plugin>3.5.1</maven-compiler-plugin>
     <lombok-mapstruct-binding>0.2.0</lombok-mapstruct-binding>
@@ -116,6 +118,23 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <!-- Testing dependencies -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit-jupiter-engine.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite-engine</artifactId>
+      <version>${junit-platform-suite-engine.version}</version>
     </dependency>
   </dependencies>
 

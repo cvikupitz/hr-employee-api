@@ -1,7 +1,7 @@
 - [ ] Logging
 - [ ] tracking IDs
 - [x] JWT authentication
-- [ ] XML Support
+- [x] XML Support
 - [ ] Swagger documentation
 - [ ] comments
 - [ ] Javadocs

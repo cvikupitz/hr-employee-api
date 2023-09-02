@@ -1,12 +1,14 @@
 <configuration scan="true">
   <contextName>COM-HR-Service</contextName>
 
+  <!--  Appender used for text-formatted logs -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
       <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
     </layout>
   </appender>
 
+  <!--  Appender for JSON-formatted logs -->
   <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="net.logstash.logback.encoder.LogstashEncoder">
       <timestampPattern>[ISO_INSTANT]</timestampPattern>
@@ -37,6 +39,7 @@
     <appender-ref ref="STDOUT_JSON" />
   </appender>
 
+  <!--  Start the application with Spring profile 'default' to enable plain-text logging -->
   <springProfile name="default">
     <logger name="com.company.hr" level="INFO" additivity="false">
       <appender-ref ref="STDOUT_ASYNC" />
@@ -46,6 +49,7 @@
     </root>
   </springProfile>
 
+  <!--  Start the application without Spring profile 'default' to enable JSON logging -->
   <springProfile name="!default">
     <logger name="com.company.hr" level="INFO" additivity="false">
       <appender-ref ref="STDOUT_JSON_ASYNC" />
