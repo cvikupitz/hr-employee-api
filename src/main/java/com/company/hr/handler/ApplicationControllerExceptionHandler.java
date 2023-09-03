@@ -2,6 +2,7 @@ package com.company.hr.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.company.hr.constants.ErrorResponseConstants;
+import com.company.hr.constants.LoggerConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.InvalidJsonResponse;
 import com.company.hr.dto.error.InvalidMediaTypeResponse;
@@ -17,6 +18,8 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.argument.StructuredArguments;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +48,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @EnableWebMvc
 @RestControllerAdvice
 public class ApplicationControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -128,6 +132,9 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now().toString())
         .build();
+    log.warn(ErrorResponseConstants.UNREADABLE_REQUEST_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_DETAIL_MSG_KEY, ex.getMessage()));
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -209,6 +216,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .errorCount(rejectedParameters != null ? rejectedParameters.size() : 0)
         .params(rejectedParameters)
         .build();
+    log.warn(ErrorResponseConstants.INVALID_REQUEST_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_ERROR_COUNT_KEY, response.getErrorCount()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_PARAMS_KEY, response.getParams()));
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -228,6 +239,9 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .timestamp(Instant.now().toString())
         .detailMsg(ex.getMessage())
         .build();
+    log.warn(ErrorResponseConstants.UNAUTHORIZED_REQUEST_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_DETAIL_MSG_KEY, ex.getMessage()));
 
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
@@ -246,6 +260,8 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .path(request.getRequest().getRequestURI())
         .timestamp(Instant.now().toString())
         .build();
+    log.warn(ErrorResponseConstants.FORBIDDEN_REQUEST_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()));
 
     return ResponseEntity
         .status(HttpStatus.FORBIDDEN)
@@ -265,6 +281,9 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .path(((ServletWebRequest) request).getRequest().getRequestURI())
         .timestamp(Instant.now().toString())
         .build();
+    log.warn(ErrorResponseConstants.NOT_FOUND_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_PATH_URI_KEY, response.getPath()));
 
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
@@ -284,6 +303,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .timestamp(Instant.now().toString())
         .missingKey(e.getIdentifier())
         .build();
+    log.warn(ErrorResponseConstants.NOT_FOUND_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_PATH_URI_KEY, response.getPath()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_MISSING_ID_KEY, e.getIdentifier()));
 
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
@@ -305,6 +328,10 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
         .methodUsed(ex.getMethod())
         .supportedMethods(ex.getSupportedMethods())
         .build();
+    log.warn(ErrorResponseConstants.METHOD_NOT_ALLOWED_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_METHOD_USED_KEY, response.getMethodUsed()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_SUPPORTED_METHODS_KEY, response.getSupportedMethods()));
 
     return ResponseEntity
         .status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -356,9 +383,15 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
               contentType != null ? contentType : "< 'Content-Type' header not provided >");
     }
 
+    InvalidMediaTypeResponse response = builder.build();
+    log.warn(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_CAUSE,
+        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_MEDIA_USED_KEY, response.getRejectedMediaType()),
+        StructuredArguments.keyValue(LoggerConstants.JSON_SUPPORTED_MEDIA_KEY, response.getSupportedMediaTypes()));
+
     return ResponseEntity
         .status(status)
-        .body(builder.build());
+        .body(response);
   }
 
 }
