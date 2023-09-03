@@ -1,7 +1,19 @@
 - [ ] Logging
 - [x] tracking IDs
 - [ ] rest of API
-- [ ] pagination
+  - [ ] GET /departments/{id}/employees
+  - [ ] GET /employeeStatuses/{id}/employees
+  - [ ] GET /employeeTitles/{id}/employees
+  - [ ] GET /employeeTypes/{id}/employees
+  - [ ] POST /employees/search
+  - [ ] GET /employees/
+    - Quest params (what to include here?)
+  - [ ] GET /employees/{id}
+  - [ ] POST /employees/
+  - [ ] PUT /employees/{id}
+  - [ ] PATCH /employees/{id}
+  - [ ] DELETE /employees/{id}
+- [ ] pagination & sorting
 - [ ] caching
 - [x] JWT authentication
 - [x] XML Support

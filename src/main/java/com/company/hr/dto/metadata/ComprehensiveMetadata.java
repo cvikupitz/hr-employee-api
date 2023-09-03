@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
 
 @Data
 @SuperBuilder
@@ -24,23 +25,24 @@ import lombok.experimental.SuperBuilder;
 public class ComprehensiveMetadata {
 
   @XmlElementWrapper
-  @XmlElement(name = "department")
-  private List<MetadataRecord> departments;
-  @XmlElementWrapper
   @XmlElement(name = "employeeStatus")
   private List<MetadataRecord> employeeStatuses;
   @XmlElementWrapper
-  @XmlElement(name = "employeeTitle")
-  private List<MetadataRecord> employeeTitles;
-  @XmlElementWrapper
   @XmlElement(name = "employeeType")
   private List<MetadataRecord> employeeTypes;
+  @XmlElementWrapper
+  @XmlElement(name = "department")
+  private List<MetadataRecord> departments;
+  @XmlElementWrapper
+  @XmlElement(name = "employeeTitle")
+  private List<MetadataRecord> employeeTitles;
 
   @JsonIgnore
   public boolean isEmpty() {
-    return (departments == null || departments.isEmpty()) &&
-        (employeeStatuses == null || employeeStatuses.isEmpty()) &&
-        (employeeTitles == null || employeeTitles.isEmpty()) &&
-        (employeeTypes == null || employeeTypes.isEmpty());
+    return
+        CollectionUtils.isEmpty(departments) &&
+        CollectionUtils.isEmpty(employeeStatuses) &&
+        CollectionUtils.isEmpty(employeeTitles) &&
+        CollectionUtils.isEmpty(employeeTypes);
   }
 }
