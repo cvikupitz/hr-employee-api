@@ -1,0 +1,4 @@
+# Disables Springdoc API in production
+springdoc:
+  api-docs:
+    enabled: false

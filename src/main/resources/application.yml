@@ -1,3 +1,4 @@
+# Info feed for actuator's info endpoint
 info:
   application:
     name: "@project.artifactId@"
@@ -10,6 +11,7 @@ info:
     lombok: "@lombok.version@"
     mapstruct: "@mapstruct.version@"
     commons-lang: "@commons-lang3.version@"
+    commons-text: "@commons-text.version@"
     java-jwt: "@java-jwt.version@"
     logback-classic: "@logback-classic.version@"
     logback-json-classic: "@logback-json-classic.version@"
@@ -20,17 +22,37 @@ info:
 
 management:
   endpoint:
+    # Provides additional info in response for actuator's health endpoint
     health:
       show-details: always
       show-components: always
   info:
     env:
       enabled: true
+  # Actuator endpoints to enable
   endpoints:
     web:
       exposure:
         include: caches,health,info,loggers,metrics,prometheus,scheduledtasks
 
+# Need this flag for exception handler to receive and process 404 errors
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
+
+  # TODO - Move this to default profile
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: admin
+    password: p4ssw0rd
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
