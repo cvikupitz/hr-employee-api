@@ -5,7 +5,6 @@ import com.company.hr.constants.ErrorResponseConstants;
 import com.company.hr.constants.LoggerConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.InvalidJsonResponse;
-import com.company.hr.dto.error.InvalidMediaTypeResponse;
 import com.company.hr.dto.error.InvalidRequestErrorResponse;
 import com.company.hr.dto.error.MethodNotAllowedResponse;
 import com.company.hr.dto.error.RejectedParameter;
@@ -26,12 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.util.MimeTypeUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
-import org.springframework.web.HttpMediaTypeException;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -335,62 +329,6 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
 
     return ResponseEntity
         .status(HttpStatus.METHOD_NOT_ALLOWED)
-        .body(response);
-  }
-
-  @Override
-  protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
-      HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status,
-      WebRequest request) {
-    return handleInvalidMediaType(ex, headers, status, (ServletWebRequest) request);
-  }
-
-  @Override
-  protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
-      HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status,
-      WebRequest request) {
-    return handleInvalidMediaType(ex, headers, status, (ServletWebRequest) request);
-  }
-
-  private ResponseEntity<Object> handleInvalidMediaType(HttpMediaTypeException ex,
-      HttpHeaders headers, HttpStatus status, ServletWebRequest request) {
-
-    InvalidMediaTypeResponse.InvalidMediaTypeResponseBuilder<?, ?> builder = InvalidMediaTypeResponse.builder();
-    String[] supportedMediaTypes =
-        StringUtils.tokenizeToStringArray(MimeTypeUtils.toString(ex.getSupportedMediaTypes()), ",",
-            true, true);
-    builder
-        .code(status.value())
-        .path(request.getRequest().getRequestURI())
-        .timestamp(Instant.now().toString())
-        .supportedMediaTypes(supportedMediaTypes);
-
-    if (status == HttpStatus.NOT_ACCEPTABLE) {
-      String acceptedTypes = MimeTypeUtils.toString(headers.getAccept());
-      builder
-          .status(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_STATUS)
-          .cause(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_CAUSE)
-          .suggestedAction(ErrorResponseConstants.MEDIA_NOT_ACCEPTED_SUGGESTION)
-          .rejectedMediaType(acceptedTypes);
-
-    } else if (status == HttpStatus.UNSUPPORTED_MEDIA_TYPE) {
-      String contentType = request.getHeader("Content-Type");
-      builder
-          .status(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_STATUS)
-          .cause(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_CAUSE)
-          .suggestedAction(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_SUGGESTION)
-          .rejectedMediaType(
-              contentType != null ? contentType : "< 'Content-Type' header not provided >");
-    }
-
-    InvalidMediaTypeResponse response = builder.build();
-    log.warn(ErrorResponseConstants.MEDIA_NOT_SUPPORTED_CAUSE,
-        StructuredArguments.keyValue(LoggerConstants.JSON_HTTP_STATUS_KEY, response.getCode()),
-        StructuredArguments.keyValue(LoggerConstants.JSON_MEDIA_USED_KEY, response.getRejectedMediaType()),
-        StructuredArguments.keyValue(LoggerConstants.JSON_SUPPORTED_MEDIA_KEY, response.getSupportedMediaTypes()));
-
-    return ResponseEntity
-        .status(status)
         .body(response);
   }
 
