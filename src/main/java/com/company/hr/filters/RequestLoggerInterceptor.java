@@ -1,7 +1,6 @@
 package com.company.hr.filters;
 
 import com.company.hr.constants.ApplicationConstants;
-import com.company.hr.constants.LoggerConstants;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +14,18 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class RequestLoggerInterceptor implements HandlerInterceptor {
 
+  public static final String MDC_REQUEST_ID_KEY = "requestId";
+  public static final String MDC_HTTP_METHOD_KEY = "httpMethod";
+  public static final String MDC_URI_KEY = "uri";
+
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
       Object handler) {
 
     String httpMethod = request.getMethod();
     String uri = request.getRequestURI();
-    String query = request.getQueryString();
+    String query = StringUtils.isBlank(request.getQueryString()) ?
+        StringUtils.EMPTY : "?" + request.getQueryString();
     String requestId = StringEscapeUtils.escapeHtml4(
         request.getHeader(ApplicationConstants.HEADER_REQUEST_ID_KEY));
     if (StringUtils.isBlank(requestId)) {
@@ -30,10 +34,9 @@ public class RequestLoggerInterceptor implements HandlerInterceptor {
           ApplicationConstants.HEADER_REQUEST_ID_KEY, request);
     }
 
-    MDC.put(LoggerConstants.MDC_REQUEST_ID_KEY, requestId);
-    MDC.put(LoggerConstants.MDC_HTTP_METHOD_KEY, httpMethod);
-    MDC.put(LoggerConstants.MDC_URI_KEY, uri);
-    MDC.put(LoggerConstants.MDC_QUERY_KEY, query);
+    MDC.put(MDC_REQUEST_ID_KEY, requestId);
+    MDC.put(MDC_HTTP_METHOD_KEY, httpMethod);
+    MDC.put(MDC_URI_KEY, uri + query);
 
     return true;
   }
@@ -42,9 +45,8 @@ public class RequestLoggerInterceptor implements HandlerInterceptor {
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
       Object handler, @Nullable Exception ex) {
 
-    MDC.remove(LoggerConstants.MDC_REQUEST_ID_KEY);
-    MDC.remove(LoggerConstants.MDC_HTTP_METHOD_KEY);
-    MDC.remove(LoggerConstants.MDC_URI_KEY);
-    MDC.remove(LoggerConstants.MDC_QUERY_KEY);
+    MDC.remove(MDC_REQUEST_ID_KEY);
+    MDC.remove(MDC_HTTP_METHOD_KEY);
+    MDC.remove(MDC_URI_KEY);
   }
 }
