@@ -6,7 +6,7 @@ public final class ConstraintConstants {
     // Private constructor to hide implicit public one
   }
 
-  public static final int NAME_CHAR_LIMIT = 48;
+  public static final int NAME_CHAR_LIMIT = 50;
   public static final String NAME_REGEX = "^[a-zA-Z]+$";
   public static final int SSN_CHAR_LIMIT = 11;
   public static final String SSN_REGEX = "^\\d{3}-\\d{2}-\\d{4}$";
