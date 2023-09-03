@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(EndpointConstants.METADATA_ROOT_URI)
+@RequestMapping(EndpointConstants.V1_ROOT_URI + EndpointConstants.METADATA_ROOT_URI)
 @Tag(name = SpringDocConstants.METADATA_API_TAG)
 public class MetadataController {
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(EndpointConstants.EMPLOYEES_ROOT_URI)
+@RequestMapping(EndpointConstants.V1_ROOT_URI + EndpointConstants.EMPLOYEES_ROOT_URI)
 @Tag(name = SpringDocConstants.EMPLOYEES_API_TAG)
 public class EmployeeController {
 

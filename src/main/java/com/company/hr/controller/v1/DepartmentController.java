@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(EndpointConstants.DEPARTMENTS_ROOT_URI)
+@RequestMapping(EndpointConstants.V1_ROOT_URI + EndpointConstants.DEPARTMENTS_ROOT_URI)
 @Tag(name = SpringDocConstants.DEPARTMENT_API_TAG)
 public class DepartmentController {
 
@@ -101,5 +102,14 @@ public class DepartmentController {
 
     MetadataRecord department = departmentService.getDepartmentById(id);
     return ResponseEntity.ok(department);
+  }
+
+  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI + EndpointConstants.EMPLOYEES_ROOT_URI,
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  @Operation(summary = "Retrieves a list of employees related to the specified department ID.")
+  public ResponseEntity<String> getEmployeesUnderDepartmentById() {
+
+    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
   }
 }

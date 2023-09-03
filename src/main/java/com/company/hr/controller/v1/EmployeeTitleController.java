@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(EndpointConstants.EMPLOYEE_TITLES_ROOT_URI)
+@RequestMapping(EndpointConstants.V1_ROOT_URI + EndpointConstants.EMPLOYEE_TITLES_ROOT_URI)
 @Tag(name = SpringDocConstants.EMPLOYEE_TITLES_API_TAG)
 public class EmployeeTitleController {
 
@@ -101,5 +102,14 @@ public class EmployeeTitleController {
 
     MetadataRecord employeeType = employeeTitleService.getEmployeeTitleById(id);
     return ResponseEntity.ok(employeeType);
+  }
+
+  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI + EndpointConstants.EMPLOYEES_ROOT_URI,
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  @Operation(summary = "Retrieves a list of employees related to the specified title ID.")
+  public ResponseEntity<String> getEmployeesUnderTitleById() {
+
+    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
   }
 }
