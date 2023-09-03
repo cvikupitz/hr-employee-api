@@ -4,7 +4,7 @@
   <!--  Appender used for text-formatted logs -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %X{appName} %X{requestId} %X{httpMethod} %X{uri}%X{query} %logger{36} - %msg%n</Pattern>
     </layout>
   </appender>
 
@@ -16,6 +16,7 @@
         <timestamp>timestamp</timestamp>
         <version>[ignore]</version>
         <levelValue>[ignore]</levelValue>
+<!--        <stackTrace>stackTrace</stackTrace>-->
       </fieldNames>
       <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
         <maxLength>9999</maxLength>
