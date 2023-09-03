@@ -33,12 +33,4 @@ public class ErrorResponseConstants {
   public static final String METHOD_NOT_ALLOWED_STATUS = ERROR_PREFIX + "405";
   public static final String METHOD_NOT_ALLOWED_CAUSE = "The HTTP method used is not allowed at the specified URI.";
   public static final String METHOD_NOT_ALLOWED_SUGGESTION = "Please check the method used and change it to one of the allowed methods listed.";
-
-  public static final String MEDIA_NOT_ACCEPTED_STATUS = ERROR_PREFIX + "406";
-  public static final String MEDIA_NOT_ACCEPTED_CAUSE = "The resource requested cannot be returned in any media types provided in the 'Accept' header.";
-  public static final String MEDIA_NOT_ACCEPTED_SUGGESTION = "Please check the list of acceptable media types and set the 'Accept' header value to any one of these allowed values.";
-
-  public static final String MEDIA_NOT_SUPPORTED_STATUS = ERROR_PREFIX + "415";
-  public static final String MEDIA_NOT_SUPPORTED_CAUSE = "The server rejected the request as the media type sent in 'Content-Type' header is not supported.";
-  public static final String MEDIA_NOT_SUPPORTED_SUGGESTION = "Please check the list of acceptable media types and set the 'Content-Type' header value to any one of these allowed values.";
 }
