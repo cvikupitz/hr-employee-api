@@ -21,5 +21,6 @@ public final class ConstraintConstants {
   public static final int PHONE_NUMBER_CHAR_LIMIT = 10;
   public static final String PHONE_NUMBER_REGEX = "^\\d{10}$";
   public static final int EMAIL_CHAR_LIMIT = 256;
-  public static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$";
+  public static final String EMAIL_REGEX =
+      "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 }
