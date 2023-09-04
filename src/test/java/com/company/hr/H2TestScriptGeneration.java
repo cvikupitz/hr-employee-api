@@ -1,21 +1,24 @@
 package com.company.hr;
 
 import com.company.hr.model.Employee;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class H2TestScriptGeneration {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
-    final int MAX_ENTRIES = 1_000;
-
-    StringBuilder builder = new StringBuilder()
-        .append("INSERT INTO employees(_ID, SSN, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,"
+    final int MAX_ENTRIES = 50_000;
+    BufferedWriter writer = new BufferedWriter(new FileWriter("employees.txt"));
+    writer.write("INSERT INTO employees(_ID, SSN, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,"
         + "GENDER, START_DATE, END_DATE, SALARY, ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, STATE, "
         + "ZIP_CODE, PRIMARY_PHONE, SECONDARY_PHONE, EMAIL_ADDRESS, DEPARTMENT_ID, STATUS_ID, "
         + "TITLE_ID, TYPE_ID, UPDATE_USER_ID, UPDATE_TS) VALUES \n");
 
     for (int i = 1; i <= MAX_ENTRIES; i++) {
 
+      StringBuilder builder = new StringBuilder();
       Employee mockEmployee = TestUtils.generateMockEmployee();
       builder
           .append("(").append(i).append(",")
@@ -57,8 +60,10 @@ public class H2TestScriptGeneration {
       } else {
         builder.append(";");
       }
+
+      writer.write(builder.toString());
     }
 
-    System.out.println(builder);
+    writer.close();
   }
 }
