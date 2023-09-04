@@ -6,7 +6,7 @@ import com.company.hr.constants.SpringDocConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.ResourceNotFoundResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
-import com.company.hr.dto.metadata.ComprehensiveMetadata;
+import com.company.hr.dto.metadata.CollectiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
 import com.company.hr.service.EmployeeTitleService;
@@ -40,8 +40,8 @@ public class EmployeeTitleController {
   @Operation(summary = "Retrieves all employee titles.")
   @ApiResponse(description = SpringDocConstants.HTTP_OK_DESCRIPTION, responseCode = SpringDocConstants.HTTP_OK,
       content = {
-          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class)),
-          @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class))
+          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CollectiveMetadata.class)),
+          @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = CollectiveMetadata.class))
       })
   @ApiResponse(description = SpringDocConstants.HTTP_NO_CONTENT_DESCRIPTION, responseCode = SpringDocConstants.HTTP_NO_CONTENT,
       content = {
@@ -58,10 +58,10 @@ public class EmployeeTitleController {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseErrorResponse.class)),
           @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = BaseErrorResponse.class))
       })
-  public ResponseEntity<ComprehensiveMetadata> getAllEmployeeTitles() {
+  public ResponseEntity<CollectiveMetadata> getAllEmployeeTitles() {
 
     List<MetadataRecord> employeeTitles = employeeTitleService.getAllEmployeeTitles();
-    ComprehensiveMetadata response = ComprehensiveMetadata.builder()
+    CollectiveMetadata response = CollectiveMetadata.builder()
         .employeeTitles(employeeTitles)
         .build();
 

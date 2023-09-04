@@ -5,7 +5,7 @@ import com.company.hr.constants.EndpointConstants;
 import com.company.hr.constants.SpringDocConstants;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
-import com.company.hr.dto.metadata.ComprehensiveMetadata;
+import com.company.hr.dto.metadata.CollectiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.enums.ClientRole;
 import com.company.hr.service.DepartmentService;
@@ -41,8 +41,8 @@ public class MetadataController {
   @Operation(summary = "Retrieves all service metadata.")
   @ApiResponse(description = SpringDocConstants.HTTP_OK_DESCRIPTION, responseCode = SpringDocConstants.HTTP_OK,
       content = {
-          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class)),
-          @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = ComprehensiveMetadata.class))
+          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CollectiveMetadata.class)),
+          @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = CollectiveMetadata.class))
       })
   @ApiResponse(description = SpringDocConstants.HTTP_NO_CONTENT_DESCRIPTION, responseCode = SpringDocConstants.HTTP_NO_CONTENT,
       content = {
@@ -59,13 +59,13 @@ public class MetadataController {
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseErrorResponse.class)),
           @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(implementation = BaseErrorResponse.class))
       })
-  public ResponseEntity<ComprehensiveMetadata> getAllMetadata() {
+  public ResponseEntity<CollectiveMetadata> getAllMetadata() {
 
     List<MetadataRecord> departments = departmentService.getAllDepartments();
     List<MetadataRecord> employeeStatuses = employeeStatusService.getAllEmployeeStatuses();
     List<MetadataRecord> employeeTitles = employeeTitleService.getAllEmployeeTitles();
     List<MetadataRecord> employeeTypes = employeeTypeService.getAllEmployeeTypes();
-    ComprehensiveMetadata response = ComprehensiveMetadata.builder()
+    CollectiveMetadata response = CollectiveMetadata.builder()
         .departments(departments)
         .employeeStatuses(employeeStatuses)
         .employeeTitles(employeeTitles)
