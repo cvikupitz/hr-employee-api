@@ -9,7 +9,7 @@ public class H2TestScriptGeneration {
 
   public static void main(String[] args) throws IOException {
 
-    final int MAX_ENTRIES = 50_000;
+    final int MAX_ENTRIES = 18_000;
     BufferedWriter writer = new BufferedWriter(new FileWriter("employees.txt"));
     writer.write("INSERT INTO employees(_ID, SSN, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,"
         + "GENDER, START_DATE, END_DATE, SALARY, ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, STATE, "
@@ -62,6 +62,7 @@ public class H2TestScriptGeneration {
       }
 
       writer.write(builder.toString());
+      System.out.printf("Wrote test record: %d / %d\n", i, MAX_ENTRIES);
     }
 
     writer.close();

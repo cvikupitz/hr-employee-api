@@ -1,6 +1,5 @@
 package com.company.hr.config;
 
-import com.company.hr.constants.EndpointConstants;
 import com.company.hr.filters.JwtAuthInterceptor;
 import com.company.hr.filters.RequestLoggerInterceptor;
 import com.company.hr.jwt.JWTAuthService;
@@ -19,10 +18,8 @@ public class WebFilterConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new RequestLoggerInterceptor())
-        .addPathPatterns(EndpointConstants.V1_ROOT_URI + "/*");
-    registry.addInterceptor(new JwtAuthInterceptor(jwtAuthService))
-        .addPathPatterns(EndpointConstants.V1_ROOT_URI + "/*");
+    registry.addInterceptor(new RequestLoggerInterceptor());
+    registry.addInterceptor(new JwtAuthInterceptor(jwtAuthService));
   }
 
   @Override
