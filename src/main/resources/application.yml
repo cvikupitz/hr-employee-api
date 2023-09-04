@@ -45,10 +45,10 @@ spring:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
     username: admin
-    password: p4ssw0rd
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+    open-in-view: false
   h2:
     console:
       enabled: true
