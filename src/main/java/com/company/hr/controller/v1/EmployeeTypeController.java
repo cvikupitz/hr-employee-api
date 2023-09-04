@@ -72,8 +72,9 @@ public class EmployeeTypeController {
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI, produces = {
-      MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  @GetMapping(
+      value = EndpointConstants.ID_PATH_VARIABLE_URI,
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @Operation(summary = "Retrieves an employee type by its ID.")
   @ApiResponse(description = SpringDocConstants.HTTP_OK_DESCRIPTION, responseCode = SpringDocConstants.HTTP_OK,
       content = {
@@ -111,7 +112,8 @@ public class EmployeeTypeController {
   }
 
   @JwtAuthenticated(ClientRole.READ_ONLY)
-  @GetMapping(value = EndpointConstants.ID_PATH_VARIABLE_URI + EndpointConstants.EMPLOYEES_ROOT_URI,
+  @GetMapping(
+      value = EndpointConstants.ID_PATH_VARIABLE_URI + EndpointConstants.EMPLOYEES_ROOT_URI,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @Operation(summary = "Retrieves a list of employees related to the specified employee type ID.")
   public ResponseEntity<String> getEmployeesUnderTypeById() {
