@@ -4,6 +4,11 @@ public final class LoggerConstants {
 
   private LoggerConstants() {}
 
+  public static final String MDC_REQUEST_ID_KEY = "requestId";
+  public static final String MDC_HTTP_METHOD_KEY = "httpMethod";
+  public static final String MDC_URI_KEY = "uri";
+  public static final String MDC_APP_NAME_KEY = "appName";
+
   public static final String JSON_HTTP_STATUS_KEY = "httpStatus";
   public static final String JSON_DETAIL_MSG_KEY = "detailMsg";
   public static final String JSON_ERROR_COUNT_KEY = "errorCount";
