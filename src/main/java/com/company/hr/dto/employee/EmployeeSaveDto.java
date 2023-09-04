@@ -51,7 +51,7 @@ public class EmployeeSaveDto {
   private String lastName;
 
   @NotBlank(message = "The member 'dateOfBirth' cannot be null, empty, or blank.")
-  @Pattern(regexp = ConstraintConstants.NAME_REGEX, message =
+  @Pattern(regexp = ConstraintConstants.DATE_REGEX, message =
       "The member 'dateOfBirth' must match the regex pattern: " + ConstraintConstants.DATE_REGEX)
   private String dateOfBirth;
 
@@ -63,11 +63,11 @@ public class EmployeeSaveDto {
   private String gender;
 
   @NotBlank(message = "The member 'startDate' cannot be null, empty, or blank.")
-  @Pattern(regexp = ConstraintConstants.NAME_REGEX, message =
+  @Pattern(regexp = ConstraintConstants.DATE_REGEX, message =
       "The member 'startDate' must match the regex pattern: " + ConstraintConstants.DATE_REGEX)
   private String startDate;
 
-  @Pattern(regexp = ConstraintConstants.NAME_REGEX, message =
+  @Pattern(regexp = ConstraintConstants.DATE_REGEX, message =
       "The member 'endDate' must match the regex pattern: " + ConstraintConstants.DATE_REGEX)
   private String endDate;
 

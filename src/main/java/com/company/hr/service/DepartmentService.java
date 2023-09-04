@@ -1,5 +1,6 @@
 package com.company.hr.service;
 
+import com.company.hr.constants.EndpointConstants;
 import com.company.hr.dto.metadata.MetadataRecord;
 import com.company.hr.exception.RecordNotFoundException;
 import com.company.hr.mapper.DepartmentMapper;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DepartmentService {
+
+  private static final String ROOT_URI =
+      EndpointConstants.V1_ROOT_URI + EndpointConstants.DEPARTMENTS_ROOT_URI;
 
   private final DepartmentRepository departmentRepository;
   private final DepartmentMapper departmentMapper;
