@@ -7,9 +7,9 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = ApplicationConstants.MAPSTRUCT_SPRING_COMPONENT)
-public interface EmployeeTitleMapper {
+public abstract class EmployeeTitleMapper {
 
-  MetadataRecord mapEmployeeTitleModelToDto(EmployeeTitle employeeTitle);
+  public abstract MetadataRecord mapEmployeeTitleModelToDto(EmployeeTitle employeeTitle);
 
-  List<MetadataRecord> mapEmployeeTitleModelsToDto(List<EmployeeTitle> employeeTitles);
+  public abstract List<MetadataRecord> mapEmployeeTitleModelsToDto(List<EmployeeTitle> employeeTitles);
 }
