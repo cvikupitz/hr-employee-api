@@ -1,5 +1,12 @@
 package com.company.hr.dto.employee;
 
+import com.company.hr.dto.links.Links;
+import com.company.hr.dto.metadata.MetadataRecord;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +16,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
+@XmlRootElement(name = "Employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EmployeeDto {
 
   private Integer id;
@@ -29,8 +39,9 @@ public class EmployeeDto {
   private String primaryPhone;
   private String secondaryPhone;
   private String emailAddress;
-  private Integer departmentId;
-  private Integer statusId;
-  private Integer titleId;
-  private Integer typeId;
+  private MetadataRecord department;
+  private MetadataRecord status;
+  private MetadataRecord title;
+  private MetadataRecord type;
+  private Links _links;
 }

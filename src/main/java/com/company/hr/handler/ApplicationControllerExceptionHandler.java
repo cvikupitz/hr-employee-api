@@ -98,6 +98,12 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     return handleInvalidRequest(ex, (ServletWebRequest) request);
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgumentException(
+      IllegalArgumentException ex, ServletWebRequest request) {
+    return handleInvalidRequest(ex, request);
+  }
+
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -193,6 +199,11 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
               .errorMessage(error.getDefaultMessage())
               .build())
           .collect(Collectors.toList());
+    } else if (ex instanceof IllegalArgumentException) {
+      IllegalArgumentException e1 = (IllegalArgumentException) ex;
+      rejectedParameters = Collections.singletonList(RejectedParameter.builder()
+          .errorMessage(e1.getLocalizedMessage())
+          .build());
     } else if (ex instanceof HttpMessageNotReadableException) {
       HttpMessageNotReadableException e1 = (HttpMessageNotReadableException) ex;
       rejectedParameters = Collections.singletonList(RejectedParameter.builder()
