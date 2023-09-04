@@ -22,7 +22,7 @@ import org.springframework.util.CollectionUtils;
 @JsonInclude(Include.NON_NULL)
 @XmlRootElement(name = "Metadata")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ComprehensiveMetadata {
+public class CollectiveMetadata {
 
   @XmlElementWrapper
   @XmlElement(name = "employeeStatus")
