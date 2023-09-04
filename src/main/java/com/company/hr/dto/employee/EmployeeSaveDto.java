@@ -124,12 +124,24 @@ public class EmployeeSaveDto {
           + ConstraintConstants.PHONE_NUMBER_REGEX)
   private String secondaryPhone;
 
-//  @NotBlank(message = "The member 'emailAddress' cannot be null, empty, or blank.")
-//  @Size(max = ConstraintConstants.EMAIL_CHAR_LIMIT, message =
-//      "The member 'emailAddress' cannot exceed " + ConstraintConstants.EMAIL_CHAR_LIMIT
-//          + " characters.")
-//  @Email(regexp = ConstraintConstants.EMAIL_REGEX, message =
-//      "The member 'emailAddress' must match the regex pattern: "
-//          + ConstraintConstants.EMAIL_REGEX)
-//  private String emailAddress;
+  @NotBlank(message = "The member 'emailAddress' cannot be null, empty, or blank.")
+  @Size(max = ConstraintConstants.EMAIL_CHAR_LIMIT, message =
+      "The member 'emailAddress' cannot exceed " + ConstraintConstants.EMAIL_CHAR_LIMIT
+          + " characters.")
+  @Pattern(regexp = ConstraintConstants.EMAIL_REGEX, message =
+      "The member 'emailAddress' must match the regex pattern: "
+          + ConstraintConstants.EMAIL_REGEX)
+  private String emailAddress;
+
+  @NotNull(message = "The member 'departmentId' cannot be null.")
+  private Integer departmentId;
+
+  @NotNull(message = "The member 'employeeStatusId' cannot be null.")
+  private Integer employeeStatusId;
+
+  @NotNull(message = "The member 'employeeTitleId' cannot be null.")
+  private Integer employeeTitleId;
+
+  @NotNull(message = "The member 'employeeTypeId' cannot be null.")
+  private Integer employeeTypeId;
 }

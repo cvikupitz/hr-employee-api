@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,16 +66,17 @@ public class Employee extends RootModel implements Serializable {
   @Column(name = "EMAIL_ADDRESS", nullable = false, length = ConstraintConstants.EMAIL_CHAR_LIMIT)
   private String emailAddress;
 
-  @Column(name = "DEPARTMENT_ID")
-  @JoinColumn(table = "departments", referencedColumnName = "_ID", nullable = false)
+  // Referenced tables
+  @ManyToOne
+  @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "_ID", nullable = false)
   private Department department;
-  @Column(name = "STATUS_ID")
-  @JoinColumn(table = "employee_statuses", columnDefinition = "_ID", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "STATUS_ID", referencedColumnName = "_ID", nullable = false)
   private EmployeeStatus status;
-  @Column(name = "TITLE_ID")
-  @JoinColumn(table = "employee_titles", columnDefinition = "_ID", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "TITLE_ID", referencedColumnName = "_ID", nullable = false)
   private EmployeeTitle title;
-  @Column(name = "TYPE_ID")
-  @JoinColumn(table = "employee_types", columnDefinition = "_ID", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "TYPE_ID", referencedColumnName = "_ID", nullable = false)
   private EmployeeType type;
 }
