@@ -22,8 +22,7 @@ import lombok.NoArgsConstructor;
 public class ResultSet<T> {
 
   private List<T> results;
-  private T result;
   private Links _links;
-  private Long count;
+  private Integer count;
   private Long total;
 }
