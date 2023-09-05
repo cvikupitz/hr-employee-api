@@ -7,9 +7,9 @@
   - [ ] GET /employeeTypes/{id}/employees
   - [ ] POST /employees/search
   - [ ] GET /employees/
-    - Quest params (what to include here?)
+      - Request params - sorting & filtering
   - [ ] GET /employees/{id}
-  - [ ] POST /employees/
+  - [x] POST /employees/
   - [ ] PUT /employees/{id}
   - [ ] PATCH /employees/{id}
   - [ ] DELETE /employees/{id}
