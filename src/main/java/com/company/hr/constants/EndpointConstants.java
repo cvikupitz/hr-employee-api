@@ -14,4 +14,7 @@ public final class EndpointConstants {
   public static final String EMPLOYEE_TYPES_ROOT_URI = "/employee-types";
   public static final String EMPLOYEES_ROOT_URI = "/employees";
   public static final String ID_PATH_VARIABLE_URI = "/{id}";
+
+  public static final String SIZE_QUERY_PARAM_NAME = "size";
+  public static final String PAGE_QUERY_PARAM_NAME = "page";
 }
