@@ -11,8 +11,8 @@
   - [ ] GET /employees/{id}
   - [x] POST /employees/
   - [ ] PUT /employees/{id}
-  - [ ] PATCH /employees/{id}
-  - [ ] DELETE /employees/{id}
+  - [x] PATCH /employees/{id}
+  - [x] DELETE /employees/{id}
 - [ ] pagination & sorting
 - [ ] caching
 - [x] JWT authentication

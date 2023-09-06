@@ -8,8 +8,6 @@ import com.company.hr.dto.links.Links;
 import com.company.hr.model.Employee;
 import com.company.hr.service.EmployeeService;
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -50,12 +48,6 @@ public abstract class EmployeeMapper {
     if (StringUtils.isBlank(value)) {
       return null;
     }
-    try {
-      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      return format.parse(value);
-    } catch (ParseException e) {
-      /* Should never happen as format validation happens at the controller layer */
-      return null;
-    }
+    return Date.valueOf(value);
   }
 }
