@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,9 +27,8 @@ public class Employee extends RootModel implements Serializable {
   private static final long serialVersionUID = 6590314153585833700L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "_ID", nullable = false, unique = true, updatable = false)
-  private Integer id;
+  private String id;
   @Column(name = "SSN", nullable = false, length = ConstraintConstants.SSN_CHAR_LIMIT, updatable = false)
   private String socialSecurityNumber;
   @Column(name = "FIRST_NAME", nullable = false, length = ConstraintConstants.NAME_CHAR_LIMIT)

@@ -32,6 +32,12 @@ public abstract class EmployeeMapper {
   @Mapping(source = "employeeTypeId", target = "type.id")
   public abstract Employee mapEmployeeDtoToModel(EmployeeSaveDto employeeSaveDto);
 
+  @Mapping(source = "departmentId", target = "department.id")
+  @Mapping(source = "employeeStatusId", target = "status.id")
+  @Mapping(source = "employeeTitleId", target = "title.id")
+  @Mapping(source = "employeeTypeId", target = "type.id")
+  public abstract void mapEmployeeDtoToExistingModel(@MappingTarget Employee employee, EmployeeSaveDto employeeSaveDto);
+
   @AfterMapping
   public void afterMappingEmployeeModelToDto(@MappingTarget EmployeeDto employeeDto) {
 

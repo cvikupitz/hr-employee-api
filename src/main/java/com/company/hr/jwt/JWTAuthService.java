@@ -4,6 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.UUID;
@@ -15,10 +18,25 @@ public final class JWTAuthService {
   public static final String APP_NAME_CLAIM = "appName";
   public static final String PERMISSION_LEVEL_CLAIM = "permissionLevel";
 
-  private final Algorithm algorithm;
-  private final JWTVerifier jwtVerifier;
+  private Algorithm algorithm;
+  private JWTVerifier jwtVerifier;
 
   public JWTAuthService(byte[] secret) {
+
+    initializeJWT(secret);
+  }
+
+  public JWTAuthService(String file) throws IOException {
+
+    byte[] secret;
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      secret = reader.readLine().getBytes();
+    }
+
+    initializeJWT(secret);
+  }
+
+  private void initializeJWT(byte[] secret) {
 
     this.algorithm = Algorithm.HMAC512(secret);
     this.jwtVerifier = JWT.require(this.algorithm)

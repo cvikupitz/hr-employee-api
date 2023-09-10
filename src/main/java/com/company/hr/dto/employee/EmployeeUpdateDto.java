@@ -133,4 +133,29 @@ public class EmployeeUpdateDto {
   private Optional<@NotNull(message = "The member 'employeeTitleId' cannot be null.") Integer> employeeTitleId;
 
   private Optional<@NotNull(message = "The member 'employeeTypeId' cannot be null.") Integer> employeeTypeId;
+
+  public boolean isEmpty() {
+
+    return this.socialSecurityNumber == null &&
+        this.firstName == null &&
+        this.middleName == null &&
+        this.lastName == null &&
+        this.dateOfBirth == null &&
+        this.gender == null &&
+        this.startDate == null &&
+        this.endDate == null &&
+        this.salary == null &&
+        this.addressLine1 == null &&
+        this.addressLine2 == null &&
+        this.city == null &&
+        this.state == null &&
+        this.zipCode == null &&
+        this.primaryPhone == null &&
+        this.secondaryPhone == null &&
+        this.emailAddress == null &&
+        this.departmentId == null &&
+        this.employeeStatusId == null &&
+        this.employeeTitleId == null &&
+        this.employeeTypeId == null;
+  }
 }
