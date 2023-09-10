@@ -1,10 +1,11 @@
 package com.company.hr.service;
 
+import com.company.hr.constants.ConstraintConstants;
 import com.company.hr.constants.EndpointConstants;
-import com.company.hr.constants.LoggerConstants;
 import com.company.hr.dto.employee.EmployeeDto;
 import com.company.hr.dto.employee.EmployeeSaveDto;
 import com.company.hr.dto.employee.EmployeeUpdateDto;
+import com.company.hr.dto.employee.UpsertResult;
 import com.company.hr.dto.links.HRef;
 import com.company.hr.dto.links.Links;
 import com.company.hr.dto.result.ResultSet;
@@ -17,9 +18,10 @@ import com.company.hr.util.PageableUtils;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,9 +37,9 @@ public class EmployeeService {
   private final EmployeeMapper employeeMapper;
   private final EmployeePatchMapper employeePatchMapper;
 
-  public ResultSet<EmployeeDto> getCollectionOfEmployees(int size, int offset) {
+  public ResultSet<EmployeeDto> getCollectionOfEmployees(Map<String, String> requestParams) {
 
-    PageRequest pageRequest = PageRequest.of(offset, size);
+    PageRequest pageRequest = PageRequest.of(0, 2000);
     Page<Employee> employeePage = employeeRepository.findAll(pageRequest);
 
     List<EmployeeDto> employees = employeePage.stream()
@@ -52,7 +54,7 @@ public class EmployeeService {
         .build();
   }
 
-  public EmployeeDto getEmployeeById(Integer id) {
+  public EmployeeDto getEmployeeById(String id) {
 
     Employee employee = employeeRepository
         .findById(id)
@@ -62,11 +64,13 @@ public class EmployeeService {
     return employeeMapper.mapEmployeeModelToDto(employee);
   }
 
-  public EmployeeDto saveNewEmployee(EmployeeSaveDto request) {
+  public EmployeeDto saveEmployee(String updateUserId, EmployeeSaveDto request) {
 
     Employee employee = employeeMapper.mapEmployeeDtoToModel(request);
+    employee.setId(
+        RandomStringUtils.random(ConstraintConstants.EMPLOYEE_ID_LENGTH, ConstraintConstants.EMPLOYEE_ID_CHARS));
     employee.setUpdateTs(Timestamp.from(Instant.now()));
-    employee.setUpdateUserId(MDC.get(LoggerConstants.MDC_APP_NAME_KEY));
+    employee.setUpdateUserId(updateUserId);
     Employee result = employeeRepository.save(employee);
     EmployeeDto employeeDto = employeeMapper.mapEmployeeModelToDto(result);
     employeeDto.set_links(Links.builder()
@@ -78,7 +82,29 @@ public class EmployeeService {
     return employeeDto;
   }
 
-  public EmployeeDto patchEmployee(Integer id, EmployeeUpdateDto request) {
+  public UpsertResult upsertEmployee(String id, String updateUserId, EmployeeSaveDto request) {
+
+    Employee employee = employeeRepository.findById(id).orElse(null);
+    boolean created;
+    if (employee == null) {
+      employee = employeeMapper.mapEmployeeDtoToModel(request);
+      employee.setId(id);
+      created = true;
+    } else {
+      employeeMapper.mapEmployeeDtoToExistingModel(employee, request);
+      created = false;
+    }
+    employee.setUpdateTs(Timestamp.from(Instant.now()));
+    employee.setUpdateUserId(updateUserId);
+    employee = employeeRepository.save(employee);
+
+    return UpsertResult.builder()
+        .created(created)
+        .employeeDto(employeeMapper.mapEmployeeModelToDto(employee))
+        .build();
+  }
+
+  public EmployeeDto patchEmployee(String id, String updateUserId, EmployeeUpdateDto request) {
 
     Employee employee = employeeRepository
         .findById(id)
@@ -86,12 +112,14 @@ public class EmployeeService {
             () -> new RecordNotFoundException("No employee record with that ID could be found.",
                 id));
     employeePatchMapper.patchEmployeeModel(employee, request);
+    employee.setUpdateTs(Timestamp.from(Instant.now()));
+    employee.setUpdateUserId(updateUserId);
     Employee result = employeeRepository.save(employee);
 
     return employeeMapper.mapEmployeeModelToDto(result);
   }
 
-  public EmployeeDto deleteEmployee(Integer id) {
+  public EmployeeDto deleteEmployee(String id) {
 
     Employee employee = employeeRepository
         .findById(id)
