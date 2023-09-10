@@ -1,7 +1,6 @@
 package com.company.hr.model;
 
 import com.company.hr.constants.ConstraintConstants;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -15,9 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class RootModel implements Serializable {
-
-  private static final long serialVersionUID = -2761608860338489887L;
+public abstract class RootModel {
 
   @Column(name = "UPDATE_USER_ID", nullable = false, length = ConstraintConstants.NAME_CHAR_LIMIT)
   private String updateUserId;

@@ -1,6 +1,5 @@
 package com.company.hr.model;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -16,9 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
-public class MetadataModel extends RootModel implements Serializable {
-
-  private static final long serialVersionUID = -516272374207333969L;
+public abstract class MetadataModel extends RootModel {
 
   @Id
   @Column(name = "_ID", nullable = false, updatable = false)
