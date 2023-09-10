@@ -8,6 +8,7 @@ public final class ApplicationConstants {
 
   public static final String MAPSTRUCT_SPRING_COMPONENT = "spring";
 
+  public static final String HEADER_CLIENT_KEY = "X-Client-Name";
   public static final String HEADER_AUTHORIZATION_KEY = "X-Authorization";
   public static final String HEADER_REQUEST_ID_KEY = "X-Request-ID";
 

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EmployeeDto {
 
-  private Integer id;
+  private String id;
   private String socialSecurityNumber;
   private String firstName;
   private String middleName;
