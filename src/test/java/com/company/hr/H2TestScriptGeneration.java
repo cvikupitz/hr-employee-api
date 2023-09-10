@@ -21,7 +21,7 @@ public class H2TestScriptGeneration {
       StringBuilder builder = new StringBuilder();
       Employee mockEmployee = TestUtils.generateMockEmployee();
       builder
-          .append("(").append(i).append(",")
+          .append("('").append(mockEmployee.getId()).append("',")
           .append("'").append(mockEmployee.getSocialSecurityNumber()).append("',")
           .append("'").append(mockEmployee.getFirstName().replace("'", "''")).append("',")
           .append("'").append(mockEmployee.getMiddleName().replace("'", "''")).append("',")

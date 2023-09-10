@@ -1,5 +1,6 @@
 package com.company.hr;
 
+import com.company.hr.constants.ConstraintConstants;
 import com.company.hr.model.Department;
 import com.company.hr.model.Employee;
 import com.company.hr.model.EmployeeStatus;
@@ -18,6 +19,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public final class TestUtils {
 
@@ -86,7 +88,7 @@ public final class TestUtils {
     Random random = new SecureRandom();
     Faker faker = new Faker();
     return  Employee.builder()
-        .id(random.nextInt())
+        .id(RandomStringUtils.random(ConstraintConstants.EMPLOYEE_ID_LENGTH, ConstraintConstants.EMPLOYEE_ID_CHARS))
         .socialSecurityNumber(faker.idNumber().ssnValid())
         .firstName(faker.name().firstName())
         .middleName(faker.name().suffix())
