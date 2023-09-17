@@ -104,6 +104,12 @@ public class ApplicationControllerExceptionHandler extends ResponseEntityExcepti
     return handleInvalidRequest(ex, request);
   }
 
+  @ExceptionHandler(NumberFormatException.class)
+  public ResponseEntity<Object> handleNumberFormatException(
+      NumberFormatException ex, ServletWebRequest request) {
+    return handleInvalidRequest(ex, request);
+  }
+
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {

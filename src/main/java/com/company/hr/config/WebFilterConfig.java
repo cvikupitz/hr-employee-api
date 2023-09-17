@@ -4,13 +4,13 @@ import com.company.hr.filters.JwtAuthInterceptor;
 import com.company.hr.filters.RequestLoggerInterceptor;
 import com.company.hr.jwt.JWTAuthService;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@RequiredArgsConstructor
+@Configuration
 public class WebFilterConfig implements WebMvcConfigurer {
 
   @Override
