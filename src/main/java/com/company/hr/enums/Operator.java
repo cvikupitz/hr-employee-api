@@ -14,4 +14,14 @@ public enum Operator {
   LESS_THAN("lt");
 
   private final String abbreviation;
+
+  private static String getAllPossibleValues() {
+
+    StringBuilder builder = new StringBuilder();
+    for (Operator operator : Operator.values()) {
+      builder.append(operator.name()).append(",");
+    }
+
+    return builder.substring(0, builder.length() - 1);
+  }
 }

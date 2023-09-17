@@ -1,65 +1,90 @@
-package com.company.hr.util;
+package com.company.hr.pojo;
 
 import com.company.hr.constants.EndpointConstants;
 import com.company.hr.constants.QueryParamConstants;
 import com.company.hr.dto.employee.EmployeeDto;
 import com.company.hr.dto.links.HRef;
 import com.company.hr.dto.links.Links;
+import com.company.hr.dto.links.Links.LinksBuilder;
+import com.company.hr.model.Employee;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-public final class QueryParamUtils {
+public final class QueryParamHandler {
 
-  private QueryParamUtils() {}
+  private final Map<String, String> QUERY_PARAMS;
+  private final int PAGE;
+  private final int SIZE;
+  private final String URI;
 
-  public static <T> Links generateLinksWithMetadata(Page<T> page, String rootUri) {
+  private static final String PAGE_PLACEHOLDER = "{page}";
 
-    final String uri = rootUri + "?" + EndpointConstants.PAGE_QUERY_PARAM_NAME + "={page}&" +
-        EndpointConstants.SIZE_QUERY_PARAM_NAME + "=" + page.getSize();
+  public QueryParamHandler(String uri, Map<String, String> queryParams) {
 
-    final int currentPage = page.getNumber();
-    final int totalPages = page.getTotalPages();
-    final int prevPage = currentPage == 0 ? 0 : currentPage - 1;
-    final int nextPage = currentPage == page.getTotalPages() - 1 ? currentPage : currentPage + 1;
+    StringBuilder uriBuilder = new StringBuilder()
+        .append(uri)
+        .append("?");
+    for (Entry<String, String> entry : queryParams.entrySet()) {
+      if (entry.getKey().equals(EndpointConstants.PAGE_QUERY_PARAM_NAME) ||
+          entry.getKey().equals(EndpointConstants.SIZE_QUERY_PARAM_NAME)) {
+        continue;
+      }
 
-    //FIXME If on last page, nullify last, and the rest..
-    return Links.builder()
-        .self(HRef.builder()
-            .href(StringUtils.replace(uri, "{page}", Integer.toString(currentPage)))
-            .build())
-        .first(HRef.builder()
-            .href(StringUtils.replace(uri, "{page}", Integer.toString(0)))
-            .build())
-        .last(HRef.builder()
-            .href(StringUtils.replace(uri, "{page}", Integer.toString(totalPages - 1)))
-            .build())
-        .prev(HRef.builder()
-            .href(StringUtils.replace(uri, "{page}", Integer.toString(prevPage)))
-            .build())
-        .next(HRef.builder()
-            .href(StringUtils.replace(uri, "{page}", Integer.toString(nextPage)))
-            .build())
-        .build();
-  }
-
-  public static PageRequest getPageObjectFromQueryParams(Map<String, String> queryParams) {
+      uriBuilder.append(entry.getKey())
+          .append("=")
+          .append(entry.getValue())
+          .append("&");
+    }
 
     String pageValue =
         queryParams.getOrDefault(QueryParamConstants.PAGE_PARAM_NAME, Integer.toString(QueryParamConstants.DEFAULT_PAGE_PARAM));
     String sizeValue =
         queryParams.getOrDefault(QueryParamConstants.SIZE_PARAM_NAME, Integer.toString(QueryParamConstants.DEFAULT_SIZE_PARAM));
 
-    int page = parseIntFromQuery(pageValue, 0, Integer.MAX_VALUE, QueryParamConstants.PAGE_PARAM_NAME);
-    int size = parseIntFromQuery(sizeValue, 1, QueryParamConstants.DEFAULT_SIZE_PARAM, QueryParamConstants.SIZE_PARAM_NAME);
-    return PageRequest.of(page, size);
+    PAGE = parseIntFromQuery(pageValue, 0, Integer.MAX_VALUE, QueryParamConstants.PAGE_PARAM_NAME);
+    SIZE = parseIntFromQuery(sizeValue, 1, QueryParamConstants.DEFAULT_SIZE_PARAM, QueryParamConstants.SIZE_PARAM_NAME);
+    uriBuilder.append(EndpointConstants.SIZE_QUERY_PARAM_NAME)
+        .append("=")
+        .append(SIZE)
+        .append("&")
+        .append(EndpointConstants.PAGE_QUERY_PARAM_NAME)
+        .append("=")
+        .append(PAGE_PLACEHOLDER);
+    URI = uriBuilder.toString();
+    QUERY_PARAMS = queryParams;
   }
 
-  private static int parseIntFromQuery(String value, int minAllowed, int maxAllowed, String paramName) {
+  public PageRequest getPageObject() {
+
+    return PageRequest.of(PAGE, SIZE);
+  }
+
+  public List<EmployeeDto> filterRequiredEmployeeFields(List<EmployeeDto> source) {
+
+    return source.stream()
+        .map(this::filterRequiredFields)
+        .collect(Collectors.toList());
+  }
+
+  public EmployeeDto filterRequiredEmployeeFields(EmployeeDto source) {
+
+    return filterRequiredFields(source);
+  }
+
+  public Example<Employee> getExampleObject() {
+    return null;
+  }
+
+  private int parseIntFromQuery(String value, int minAllowed, int maxAllowed, String paramName) {
 
     int result;
 
@@ -78,9 +103,12 @@ public final class QueryParamUtils {
     return result;
   }
 
-  public static EmployeeDto filterRequiredFields(Map<String, String> queryParams, EmployeeDto source) {
+  private EmployeeDto filterRequiredFields(EmployeeDto source) {
 
-    String fields = queryParams.getOrDefault(QueryParamConstants.FIELDS_PARAM_NAME, "");
+    String fields = QUERY_PARAMS.getOrDefault(QueryParamConstants.FIELDS_PARAM_NAME, "");
+    if (StringUtils.isBlank(fields)) {
+      return source;
+    }
     Set<String> requestedFields = new HashSet<>(Arrays.asList(fields.split(",")));
     if (requestedFields.isEmpty()) {
       return source;
@@ -113,21 +141,33 @@ public final class QueryParamUtils {
         .build();
   }
 
-  /*
-  firstName[=], default = "*"
-  middleName[=], default = "*"
-  lastName[=], default = "*"
-  dateOfBirth[>,<,=,<=,>=], default = "*"
-  gender[=], default="*"
-  startDate[>,<,=,<=,>=], default = "*"
-  endDate[>,<,=,<=,>=], default = "*"
-  salary[>,<,=,<=,>=], default = "*"
-  city[=], default="*"
-  state[=], default="*"
-  zipCode[=], default="*"
-  department[=], default="*"
-  status[=], default="*"
-  title[=], default="*"
-  type[=], default="*"
-  */
+  public Links generateLinksWithMetadata(Page<?> page) {
+
+    final int totalPages = page.getTotalPages();
+    LinksBuilder<?, ?> linksBuilder = Links.builder()
+        .self(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(PAGE)))
+            .build())
+        .first(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(0)))
+            .build())
+        .last(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(totalPages - 1)))
+            .build());
+
+    if (PAGE != 0) {
+      final int prevPage = PAGE - 1;
+      linksBuilder.prev(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(prevPage)))
+            .build());
+    }
+
+    if (PAGE != totalPages - 1) {
+      linksBuilder.next(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(PAGE + 1)))
+            .build());
+    }
+
+    return linksBuilder.build();
+  }
 }

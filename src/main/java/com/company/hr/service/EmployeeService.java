@@ -13,8 +13,8 @@ import com.company.hr.exception.RecordNotFoundException;
 import com.company.hr.mapper.EmployeeMapper;
 import com.company.hr.mapper.EmployeePatchMapper;
 import com.company.hr.model.Employee;
+import com.company.hr.pojo.QueryParamHandler;
 import com.company.hr.repository.EmployeeRepository;
-import com.company.hr.util.QueryParamUtils;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,16 +40,19 @@ public class EmployeeService {
 
   public ResultSet<EmployeeDto> getCollectionOfEmployees(Map<String, String> requestParams) {
 
-    PageRequest pageRequest = QueryParamUtils.getPageObjectFromQueryParams(requestParams);
+    QueryParamHandler queryParamHandler = new QueryParamHandler(SELF_REF_ROOT_LINK, requestParams);
+    PageRequest pageRequest = queryParamHandler.getPageObject();
+    Example<Employee> example = queryParamHandler.getExampleObject();
     Page<Employee> employeePage = employeeRepository.findAll(pageRequest);
 
     List<EmployeeDto> employees = employeePage.stream()
         .map(employeeMapper::mapEmployeeModelToDto)
+        .map(queryParamHandler::filterRequiredEmployeeFields)
         .collect(Collectors.toList());
 
     return ResultSet.<EmployeeDto>builder()
         .results(employees)
-        ._links(QueryParamUtils.generateLinksWithMetadata(employeePage, SELF_REF_ROOT_LINK))
+        ._links(queryParamHandler.generateLinksWithMetadata(employeePage))
         .count(employees.size())
         .total(employeePage.getTotalElements())
         .build();
