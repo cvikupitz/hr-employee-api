@@ -5,15 +5,15 @@
   - [ ] GET /employeeStatuses/{id}/employees
   - [ ] GET /employeeTitles/{id}/employees
   - [ ] GET /employeeTypes/{id}/employees
-  - [ ] POST /employees/search
-  - [ ] GET /employees/
-      - Request params - sorting & filtering
-  - [ ] GET /employees/{id}
+  - [x] GET /employees/
+  - [x] GET /employees/{id}
   - [x] POST /employees/
-  - [ ] PUT /employees/{id}
+  - [x] PUT /employees/{id}
   - [x] PATCH /employees/{id}
   - [x] DELETE /employees/{id}
-- [ ] pagination & sorting
+- [x] pagination
+- [ ] filtering
+- [ ] sorting
 - [ ] caching
 - [x] JWT authentication
 - [x] XML Support
@@ -23,5 +23,4 @@
 - [x] roles/access levels
 - [ ] unit testing
 - [ ] reformat code
-- [ ] e-tags
 - [ ] custom response headers

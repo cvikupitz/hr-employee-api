@@ -14,7 +14,7 @@ import com.company.hr.mapper.EmployeeMapper;
 import com.company.hr.mapper.EmployeePatchMapper;
 import com.company.hr.model.Employee;
 import com.company.hr.repository.EmployeeRepository;
-import com.company.hr.util.PageableUtils;
+import com.company.hr.util.QueryParamUtils;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -39,7 +39,7 @@ public class EmployeeService {
 
   public ResultSet<EmployeeDto> getCollectionOfEmployees(Map<String, String> requestParams) {
 
-    PageRequest pageRequest = PageRequest.of(0, 2000);
+    PageRequest pageRequest = QueryParamUtils.getPageObjectFromQueryParams(requestParams);
     Page<Employee> employeePage = employeeRepository.findAll(pageRequest);
 
     List<EmployeeDto> employees = employeePage.stream()
@@ -48,7 +48,7 @@ public class EmployeeService {
 
     return ResultSet.<EmployeeDto>builder()
         .results(employees)
-        ._links(PageableUtils.generateLinksWithMetadata(employeePage, SELF_REF_ROOT_LINK))
+        ._links(QueryParamUtils.generateLinksWithMetadata(employeePage, SELF_REF_ROOT_LINK))
         .count(employees.size())
         .total(employeePage.getTotalElements())
         .build();
