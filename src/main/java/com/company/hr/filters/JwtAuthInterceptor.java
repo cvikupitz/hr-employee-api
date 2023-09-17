@@ -5,7 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.company.hr.annotations.JwtAuthenticated;
 import com.company.hr.constants.ApplicationConstants;
 import com.company.hr.constants.LoggerConstants;
-import com.company.hr.enums.ClientRole;
+import com.company.hr.enums.PermissionLevel;
 import com.company.hr.exception.DeniedPermissionException;
 import com.company.hr.jwt.JWTAuthService;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +45,9 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     Claim appName = decodedJWT.getClaim(JWTAuthService.APP_NAME_CLAIM);
     MDC.put(LoggerConstants.MDC_APP_NAME_KEY, appName.asString());
     Claim userRole = decodedJWT.getClaim(JWTAuthService.PERMISSION_LEVEL_CLAIM);
-    ClientRole accessLevel = authAnnotation.value();
+    PermissionLevel permissionLevel = authAnnotation.value();
 
-    if (userRole.asInt() < accessLevel.getLevel()) {
+    if (userRole.asInt() < permissionLevel.getLevel()) {
       throw new DeniedPermissionException(
           "The authenticated user does not have permission to access this resource.");
     }

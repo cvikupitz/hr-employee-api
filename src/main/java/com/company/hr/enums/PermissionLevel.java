@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public enum ClientRole {
+public enum PermissionLevel {
 
   /**
    * {@code READ_ONLY}<br>
