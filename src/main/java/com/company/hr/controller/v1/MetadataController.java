@@ -7,7 +7,7 @@ import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.metadata.CollectiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
-import com.company.hr.enums.ClientRole;
+import com.company.hr.enums.PermissionLevel;
 import com.company.hr.service.DepartmentService;
 import com.company.hr.service.EmployeeStatusService;
 import com.company.hr.service.EmployeeTitleService;
@@ -36,7 +36,7 @@ public class MetadataController {
   private final EmployeeTitleService employeeTitleService;
   private final EmployeeTypeService employeeTypeService;
 
-  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @JwtAuthenticated(PermissionLevel.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @Operation(summary = "Retrieves all service metadata.")
   @ApiResponse(description = SpringDocConstants.HTTP_OK_DESCRIPTION, responseCode = SpringDocConstants.HTTP_OK,

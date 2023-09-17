@@ -1,6 +1,6 @@
 package com.company.hr.annotations;
 
-import com.company.hr.enums.ClientRole;
+import com.company.hr.enums.PermissionLevel;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -35,5 +35,5 @@ public @interface JwtAuthenticated {
    *
    * @return The minimum permission level needed to access this operation.
    */
-  ClientRole value();
+  PermissionLevel value();
 }

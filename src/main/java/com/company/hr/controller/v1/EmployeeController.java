@@ -14,7 +14,7 @@ import com.company.hr.dto.error.InvalidRequestErrorResponse;
 import com.company.hr.dto.error.ResourceNotFoundResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.result.ResultSet;
-import com.company.hr.enums.ClientRole;
+import com.company.hr.enums.PermissionLevel;
 import com.company.hr.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,7 +50,7 @@ public class EmployeeController {
 
   private final EmployeeService employeeService;
 
-  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @JwtAuthenticated(PermissionLevel.READ_ONLY)
   @GetMapping(
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @Operation(summary = "Retrieves a page of employee records.")
@@ -82,7 +82,7 @@ public class EmployeeController {
         ResponseEntity.ok(resultSet);
   }
 
-  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @JwtAuthenticated(PermissionLevel.READ_ONLY)
   @GetMapping(
       value = EndpointConstants.ID_PATH_VARIABLE_URI,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -118,7 +118,7 @@ public class EmployeeController {
     return ResponseEntity.ok(employeeDto);
   }
 
-  @JwtAuthenticated(ClientRole.USER)
+  @JwtAuthenticated(PermissionLevel.USER)
   @PostMapping(
       consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -158,7 +158,7 @@ public class EmployeeController {
     return ResponseEntity.created(location).body(employee);
   }
 
-  @JwtAuthenticated(ClientRole.USER)
+  @JwtAuthenticated(PermissionLevel.USER)
   @PutMapping(
       value = EndpointConstants.ID_PATH_VARIABLE_URI,
       consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -214,7 +214,7 @@ public class EmployeeController {
     }
   }
 
-  @JwtAuthenticated(ClientRole.USER)
+  @JwtAuthenticated(PermissionLevel.USER)
   @PatchMapping(
       value = EndpointConstants.ID_PATH_VARIABLE_URI,
       consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -264,7 +264,7 @@ public class EmployeeController {
     return ResponseEntity.ok(employee);
   }
 
-  @JwtAuthenticated(ClientRole.ADMINISTRATOR)
+  @JwtAuthenticated(PermissionLevel.ADMINISTRATOR)
   @DeleteMapping(
       value = EndpointConstants.ID_PATH_VARIABLE_URI,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

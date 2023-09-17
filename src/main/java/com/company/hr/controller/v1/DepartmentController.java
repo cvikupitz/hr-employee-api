@@ -8,7 +8,7 @@ import com.company.hr.dto.error.ResourceNotFoundResponse;
 import com.company.hr.dto.error.UnauthorizedRequestResponse;
 import com.company.hr.dto.metadata.CollectiveMetadata;
 import com.company.hr.dto.metadata.MetadataRecord;
-import com.company.hr.enums.ClientRole;
+import com.company.hr.enums.PermissionLevel;
 import com.company.hr.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,7 +34,7 @@ public class DepartmentController {
 
   private final DepartmentService departmentService;
 
-  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @JwtAuthenticated(PermissionLevel.READ_ONLY)
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @Operation(summary = "Retrieves all departments.")
   @ApiResponse(description = SpringDocConstants.HTTP_OK_DESCRIPTION, responseCode = SpringDocConstants.HTTP_OK,
@@ -69,7 +69,7 @@ public class DepartmentController {
         ResponseEntity.ok(response);
   }
 
-  @JwtAuthenticated(ClientRole.READ_ONLY)
+  @JwtAuthenticated(PermissionLevel.READ_ONLY)
   @GetMapping(
       value = EndpointConstants.ID_PATH_VARIABLE_URI,
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
