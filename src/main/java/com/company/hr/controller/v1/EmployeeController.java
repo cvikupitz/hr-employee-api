@@ -8,7 +8,7 @@ import com.company.hr.constants.SpringDocConstants;
 import com.company.hr.dto.employee.EmployeeDto;
 import com.company.hr.dto.employee.EmployeeSaveDto;
 import com.company.hr.dto.employee.EmployeeUpdateDto;
-import com.company.hr.dto.employee.UpsertResult;
+import com.company.hr.pojo.UpsertResult;
 import com.company.hr.dto.error.BaseErrorResponse;
 import com.company.hr.dto.error.InvalidRequestErrorResponse;
 import com.company.hr.dto.error.ResourceNotFoundResponse;

@@ -10,6 +10,7 @@ public final class LoggerConstants {
   public static final String MDC_APP_NAME_KEY = "appName";
 
   public static final String JSON_HTTP_STATUS_KEY = "httpStatus";
+  public static final String JSON_EXEC_TIME_KEY = "execTime";
   public static final String JSON_DETAIL_MSG_KEY = "detailMsg";
   public static final String JSON_ERROR_COUNT_KEY = "errorCount";
   public static final String JSON_PARAMS_KEY = "params";

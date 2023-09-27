@@ -29,6 +29,7 @@ public class WebFilterConfig implements WebMvcConfigurer {
 
   @Override
   public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-    configurer.defaultContentType(MediaType.APPLICATION_JSON).ignoreAcceptHeader(false);
+    configurer.defaultContentType(MediaType.APPLICATION_JSON)
+        .ignoreAcceptHeader(false);
   }
 }
