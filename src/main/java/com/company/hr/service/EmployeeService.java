@@ -5,7 +5,7 @@ import com.company.hr.constants.EndpointConstants;
 import com.company.hr.dto.employee.EmployeeDto;
 import com.company.hr.dto.employee.EmployeeSaveDto;
 import com.company.hr.dto.employee.EmployeeUpdateDto;
-import com.company.hr.dto.employee.UpsertResult;
+import com.company.hr.pojo.UpsertResult;
 import com.company.hr.dto.links.HRef;
 import com.company.hr.dto.links.Links;
 import com.company.hr.dto.result.ResultSet;
@@ -43,7 +43,7 @@ public class EmployeeService {
     QueryParamHandler queryParamHandler = new QueryParamHandler(SELF_REF_ROOT_LINK, requestParams);
     PageRequest pageRequest = queryParamHandler.getPageObject();
     Example<Employee> example = queryParamHandler.getExampleObject();
-    Page<Employee> employeePage = employeeRepository.findAll(pageRequest);
+    Page<Employee> employeePage = employeeRepository.findAll(example, pageRequest);
 
     List<EmployeeDto> employees = employeePage.stream()
         .map(employeeMapper::mapEmployeeModelToDto)

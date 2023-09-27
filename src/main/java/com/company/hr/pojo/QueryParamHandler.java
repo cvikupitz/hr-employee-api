@@ -1,5 +1,8 @@
 package com.company.hr.pojo;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.caseSensitive;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
+
 import com.company.hr.constants.EndpointConstants;
 import com.company.hr.constants.QueryParamConstants;
 import com.company.hr.dto.employee.EmployeeDto;
@@ -7,6 +10,7 @@ import com.company.hr.dto.links.HRef;
 import com.company.hr.dto.links.Links;
 import com.company.hr.dto.links.Links.LinksBuilder;
 import com.company.hr.model.Employee;
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -16,8 +20,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.util.UriUtils;
 
 public final class QueryParamHandler {
 
@@ -33,7 +39,8 @@ public final class QueryParamHandler {
     StringBuilder uriBuilder = new StringBuilder()
         .append(uri)
         .append("?");
-    for (Entry<String, String> entry : queryParams.entrySet()) {
+    Map<String, String> encodedQueryParams = UriUtils.encodeUriVariables(queryParams);
+    for (Entry<String, String> entry : encodedQueryParams.entrySet()) {
       if (entry.getKey().equals(EndpointConstants.PAGE_QUERY_PARAM_NAME) ||
           entry.getKey().equals(EndpointConstants.SIZE_QUERY_PARAM_NAME)) {
         continue;
@@ -78,10 +85,6 @@ public final class QueryParamHandler {
   public EmployeeDto filterRequiredEmployeeFields(EmployeeDto source) {
 
     return filterRequiredFields(source);
-  }
-
-  public Example<Employee> getExampleObject() {
-    return null;
   }
 
   private int parseIntFromQuery(String value, int minAllowed, int maxAllowed, String paramName) {
@@ -141,30 +144,66 @@ public final class QueryParamHandler {
         .build();
   }
 
+  public Example<Employee> getExampleObject() {
+
+    /*
+  public static final String DEPARTMENT_PARAM_NAME = "department";
+  public static final String STATUS_PARAM_NAME = "status";
+  public static final String TITLE_PARAM_NAME = "title";
+  public static final String TYPE_PARAM_NAME = "type";
+    */
+    ExampleMatcher matcher = ExampleMatcher.matching()
+        .withIgnoreNullValues()
+        .withMatcher(QueryParamConstants.FIRST_NAME_PARAM_NAME, caseSensitive())
+        .withMatcher(QueryParamConstants.MIDDLE_NAME_PARAM_NAME, caseSensitive())
+        .withMatcher(QueryParamConstants.LAST_NAME_PARAM_NAME, caseSensitive())
+        .withMatcher(QueryParamConstants.GENDER_PARAM_NAME, ignoreCase())
+        .withMatcher(QueryParamConstants.CITY_PARAM_NAME, ignoreCase())
+        .withMatcher(QueryParamConstants.STATE_PARAM_NAME, ignoreCase());
+
+    Employee employee = Employee.builder()
+        .socialSecurityNumber(QUERY_PARAMS.get(QueryParamConstants.SSN_PARAM_NAME))
+        .firstName(QUERY_PARAMS.get(QueryParamConstants.FIRST_NAME_PARAM_NAME))
+        .middleName(QUERY_PARAMS.get(QueryParamConstants.MIDDLE_NAME_PARAM_NAME))
+        .lastName(QUERY_PARAMS.get(QueryParamConstants.LAST_NAME_PARAM_NAME))
+        .gender(QUERY_PARAMS.get(QueryParamConstants.GENDER_PARAM_NAME))
+        .city(QUERY_PARAMS.get(QueryParamConstants.CITY_PARAM_NAME))
+        .state(QUERY_PARAMS.get(QueryParamConstants.STATE_PARAM_NAME))
+        .zipCode(QUERY_PARAMS.get(QueryParamConstants.ZIP_CODE_PARAM_NAME))
+        .startDate(QUERY_PARAMS.containsKey(QueryParamConstants.DATE_OF_BIRTH_PARAM_NAME) ?
+            Date.valueOf(QUERY_PARAMS.get(QueryParamConstants.DATE_OF_BIRTH_PARAM_NAME)) : null)
+        .startDate(QUERY_PARAMS.containsKey(QueryParamConstants.START_DATE_PARAM_NAME) ?
+            Date.valueOf(QUERY_PARAMS.get(QueryParamConstants.START_DATE_PARAM_NAME)) : null)
+        .endDate(QUERY_PARAMS.containsKey(QueryParamConstants.END_DATE_PARAM_NAME) ?
+            Date.valueOf(QUERY_PARAMS.get(QueryParamConstants.END_DATE_PARAM_NAME)) : null)
+        .build();
+    return Example.of(employee, matcher);
+  }
+
   public Links generateLinksWithMetadata(Page<?> page) {
 
     final int totalPages = page.getTotalPages();
     LinksBuilder<?, ?> linksBuilder = Links.builder()
         .self(HRef.builder()
             .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(PAGE)))
-            .build())
-        .first(HRef.builder()
-            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(0)))
-            .build())
-        .last(HRef.builder()
-            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(totalPages - 1)))
             .build());
 
     if (PAGE != 0) {
       final int prevPage = PAGE - 1;
       linksBuilder.prev(HRef.builder()
             .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(prevPage)))
+            .build())
+      .first(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(0)))
             .build());
     }
 
     if (PAGE != totalPages - 1) {
       linksBuilder.next(HRef.builder()
             .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(PAGE + 1)))
+            .build())
+      .last(HRef.builder()
+            .href(StringUtils.replace(URI, PAGE_PLACEHOLDER, Integer.toString(totalPages - 1)))
             .build());
     }
 
